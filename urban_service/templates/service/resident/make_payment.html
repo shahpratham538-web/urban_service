@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Pay for Booking</h2>
+
+<p><strong>Service:</strong> {{ booking.service.serviceName }}</p>
+<p><strong>Provider:</strong> {{ booking.service.provider.name }}</p>
+<p><strong>Scheduled:</strong> {{ booking.scheduled_date|default:"Not specified" }}</p>
+
+<hr>
+
+<p><strong>Amount Due:</strong> ₹{{ booking.service.servicePrize }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <p><em>This is a simulated payment. Click below to complete the transaction.</em></p>
+    <button type="submit" style="background:green; color:white; padding:10px 20px; font-size:16px; cursor:pointer;">
+        Pay ₹{{ booking.service.servicePrize }}
+    </button>
+    <a href="{% url 'resident_bookings' %}" style="margin-left:10px;">Cancel</a>
+</form>
+
+{% endblock %}

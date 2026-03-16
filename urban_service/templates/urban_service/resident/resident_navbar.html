@@ -1,0 +1,45 @@
+<div style="background:#ddd; padding:10px;">
+
+    <h3>Resident Menu</h3>
+
+    <ul>
+
+        <li>
+            <a href="{% url 'resident_dashboard' %}">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'list_services' %}">
+                Browse Services
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'resident_bookings' %}">
+                My Bookings
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'payment_history' %}">
+                Payment History
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'my_tickets' %}">
+                Support Tickets
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'logout' %}">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</div>

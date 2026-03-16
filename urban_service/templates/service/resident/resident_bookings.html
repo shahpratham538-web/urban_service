@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>My Bookings</h2>
+
+<table border="1">
+
+<tr>
+<th>Service</th>
+<th>Provider</th>
+<th>Status</th>
+<th>Booked On</th>
+<th>Scheduled For</th>
+<th>Actions</th>
+</tr>
+
+{% for booking in bookings %}
+
+<tr>
+<td>{{ booking.service.serviceName }}</td>
+<td>{{ booking.service.provider.name }}</td>
+<td>{{ booking.get_status_display }}</td>
+<td>{{ booking.booking_date }}</td>
+<td>{{ booking.scheduled_date|default:"—" }}</td>
+<td>
+    <!-- Pay button for completed bookings without payment -->
+    {% if booking.status == 'completed' and not booking.payment %}
+        <a href="{% url 'make_payment' booking.id %}" style="color:green; font-weight:bold;">💳 Pay Now</a><br>
+    {% endif %}
+
+    {% if booking.payment %}
+        ✅ Paid (₹{{ booking.payment.amount }})
+    {% endif %}
+
+    <!-- Review link for completed bookings -->
+    {% if booking.status == 'completed' and not booking.review %}
+        <a href="{% url 'submit_review' booking.id %}">⭐ Leave Review</a><br>
+    {% elif booking.review %}
+        ⭐ Reviewed ({{ booking.review.rating }}★)
+    {% endif %}
+
+    <!-- Message link -->
+    <a href="{% url 'booking_conversation' booking.id %}">💬 Messages</a>
+</td>
+</tr>
+
+{% empty %}
+<tr>
+    <td colspan="6">No bookings yet. <a href="{% url 'list_services' %}">Browse services</a></td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

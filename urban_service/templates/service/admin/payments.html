@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>All Payments</h2>
+
+<p><strong>Total Revenue (completed):</strong> ₹{{ total_revenue }}</p>
+
+<table border="1">
+<tr>
+    <th>Transaction ID</th>
+    <th>Resident</th>
+    <th>Service</th>
+    <th>Provider</th>
+    <th>Amount</th>
+    <th>Status</th>
+    <th>Paid At</th>
+</tr>
+{% for payment in payments %}
+<tr>
+    <td>{{ payment.transaction_id }}</td>
+    <td>{{ payment.booking.resident.name }}</td>
+    <td>{{ payment.booking.service.serviceName }}</td>
+    <td>{{ payment.booking.service.provider.name }}</td>
+    <td>₹{{ payment.amount }}</td>
+    <td>{{ payment.status }}</td>
+    <td>{{ payment.paid_at|default:"—" }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7">No payments recorded yet.</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

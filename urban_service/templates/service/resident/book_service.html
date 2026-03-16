@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Book: {{ service.serviceName }}</h2>
+
+<p><strong>Provider:</strong> {{ service.provider.name }}</p>
+<p><strong>Price:</strong> ₹{{ service.servicePrize }}</p>
+<p>{{ service.serviceDescription }}</p>
+
+<hr>
+
+<h3>Schedule Your Booking</h3>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Confirm Booking</button>
+    <a href="{% url 'list_services' %}">Cancel</a>
+</form>
+
+{% endblock %}

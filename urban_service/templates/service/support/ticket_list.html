@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>All Support Tickets</h2>
+
+<table border="1">
+<tr>
+    <th>#</th>
+    <th>Subject</th>
+    <th>Raised By</th>
+    <th>Priority</th>
+    <th>Status</th>
+    <th>Created</th>
+    <th>Actions</th>
+</tr>
+{% for ticket in tickets %}
+<tr>
+    <td>{{ ticket.id }}</td>
+    <td>{{ ticket.subject }}<br><small>{{ ticket.description|truncatewords:20 }}</small></td>
+    <td>{{ ticket.raised_by.name }} ({{ ticket.raised_by.role }})</td>
+    <td>{{ ticket.priority }}</td>
+    <td>{{ ticket.status }}</td>
+    <td>{{ ticket.created_at }}</td>
+    <td>
+        {% if ticket.status == 'open' %}
+            <a href="{% url 'update_ticket_status' ticket.id 'in_progress' %}">Pick Up</a>
+        {% endif %}
+        {% if ticket.status == 'in_progress' %}
+            <a href="{% url 'update_ticket_status' ticket.id 'resolved' %}">Resolve</a>
+        {% endif %}
+        {% if ticket.status == 'resolved' %}
+            <a href="{% url 'update_ticket_status' ticket.id 'closed' %}">Close</a>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="7">No tickets found.</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

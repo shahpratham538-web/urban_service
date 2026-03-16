@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Support Dashboard</h1>
+
+<p>Welcome {{ request.user.name }}</p>
+
+<h3>Support Actions</h3>
+
+<ul>
+    <li><a href="{% url 'support_tickets' %}">View All Tickets</a></li>
+</ul>
+
+<h3>Quick Stats</h3>
+<p>Use the ticket list to manage and resolve issues raised by users and providers.</p>
+
+{% endblock %}

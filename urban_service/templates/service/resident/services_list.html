@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Available Services</h2>
+
+<!-- Category filter -->
+<div style="margin-bottom:20px;">
+    <strong>Filter by Category:</strong>
+    <a href="{% url 'list_services' %}">All</a>
+    {% for cat in categories %}
+        |
+        <a href="{% url 'list_services' %}?category={{ cat.id }}"
+           {% if selected_category == cat.id|slugify %}style="font-weight:bold"{% endif %}>
+            {{ cat.name }}
+        </a>
+    {% endfor %}
+</div>
+
+{% for service in services %}
+
+<div style="border:1px solid gray; padding:20px; margin:20px; width:300px">
+
+<img src="{{ service.serviceImage.url }}" width="250">
+
+<h3>{{ service.serviceName }}</h3>
+
+<p>{{ service.serviceDescription }}</p>
+
+<p><b>Price:</b> ₹{{ service.servicePrize }}</p>
+
+<p><b>Provider:</b> {{ service.provider.name }}</p>
+
+{% if service.category %}
+<p><b>Category:</b> {{ service.category.name }}</p>
+{% endif %}
+
+<a href="{% url 'book_service' service.id %}">
+Book Service
+</a>
+
+</div>
+
+{% empty %}
+<p>No services available right now.</p>
+{% endfor %}
+
+{% endblock %}

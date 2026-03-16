@@ -1,0 +1,51 @@
+<div style="background:#eee; padding:15px;">
+
+    <h3>Admin Panel</h3>
+
+    <ul>
+
+        <li>
+            <a href="{% url 'admin_dashboard' %}">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'admin_analytics' %}">
+                Analytics
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'admin_user_list' %}">
+                Manage Users
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'admin_service_list' %}">
+                Manage Services
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'support_tickets' %}">
+                View Tickets
+            </a>
+        </li>
+
+        <li>
+            <a href="/admin/">
+                Django Admin Panel
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'logout' %}">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</div>

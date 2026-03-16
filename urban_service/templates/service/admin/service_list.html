@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Service Management</h2>
+
+<table border="1">
+<tr>
+    <th>Service</th>
+    <th>Provider</th>
+    <th>Category</th>
+    <th>Price</th>
+    <th>Active</th>
+    <th>Action</th>
+</tr>
+{% for service in services %}
+<tr>
+    <td>{{ service.serviceName }}</td>
+    <td>{{ service.provider.name }}</td>
+    <td>{{ service.category|default:"—" }}</td>
+    <td>₹{{ service.servicePrize }}</td>
+    <td>{{ service.is_active|yesno:"Yes,No" }}</td>
+    <td>
+        <form method="post" action="{% url 'admin_toggle_service' service.id %}" style="display:inline;">
+            {% csrf_token %}
+            {% if service.is_active %}
+                <button type="submit">Deactivate</button>
+            {% else %}
+                <button type="submit">Activate</button>
+            {% endif %}
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

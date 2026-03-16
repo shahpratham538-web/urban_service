@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>✅ Payment Successful!</h2>
+
+<p>Your payment for <strong>{{ booking.service.serviceName }}</strong> has been processed successfully.</p>
+
+<table border="1" style="margin:20px 0;">
+    <tr><td><strong>Transaction ID</strong></td><td>{{ payment.transaction_id }}</td></tr>
+    <tr><td><strong>Amount</strong></td><td>₹{{ payment.amount }}</td></tr>
+    <tr><td><strong>Status</strong></td><td>{{ payment.status }}</td></tr>
+    <tr><td><strong>Paid At</strong></td><td>{{ payment.paid_at }}</td></tr>
+</table>
+
+<p>
+    <a href="{% url 'resident_bookings' %}">Back to My Bookings</a> |
+    <a href="{% url 'payment_history' %}">View Payment History</a>
+</p>
+
+{% endblock %}

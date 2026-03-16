@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>User Management</h2>
+
+<table border="1">
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Active</th>
+    <th>Joined</th>
+    <th>Action</th>
+</tr>
+{% for user in users %}
+<tr>
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.role }}</td>
+    <td>{{ user.is_active|yesno:"Yes,No" }}</td>
+    <td>{{ user.created_at }}</td>
+    <td>
+        <form method="post" action="{% url 'admin_toggle_user' user.id %}" style="display:inline;">
+            {% csrf_token %}
+            {% if user.is_active %}
+                <button type="submit">Deactivate</button>
+            {% else %}
+                <button type="submit">Activate</button>
+            {% endif %}
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

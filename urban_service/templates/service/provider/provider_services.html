@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>My Services</h2>
+
+<p><a href="{% url 'create_service' %}">+ Create New Service</a></p>
+
+{% for service in services %}
+
+<div style="border:1px solid gray; padding:15px; margin:10px;">
+
+<h3>{{ service.serviceName }}</h3>
+
+<p>{{ service.serviceDescription }}</p>
+
+<p>Price: ₹{{ service.servicePrize }}</p>
+
+{% if service.serviceImage %}
+<img src="{{ service.serviceImage.url }}" width="200">
+{% endif %}
+
+<p>Status: {% if service.is_active %}Active{% else %}Inactive{% endif %}</p>
+
+<p>
+    <a href="{% url 'edit_service' service.id %}">Edit</a> |
+    <a href="{% url 'delete_service' service.id %}" style="color:red;">Delete</a>
+</p>
+
+</div>
+
+<hr>
+
+{% empty %}
+<p>You haven't created any services yet.</p>
+{% endfor %}
+
+{% endblock %}

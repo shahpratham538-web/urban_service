@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Service Platform</title>
+</head>
+<body>
+
+    {% comment %} check role for navigation {% endcomment %}
+
+    {% if request.user.role == 'provider' %}
+        {% include 'urban_service/provider/provider_sidebar.html' %}
+
+    {% elif request.user.role == 'resident' %}
+        {% include 'urban_service/resident/resident_navbar.html' %}
+
+    {% elif request.user.role == 'admin' %}
+        {% include 'urban_service/admin/admin_sidebar.html' %}
+
+    {% elif request.user.role == 'support' %}
+        {% include 'urban_service/support/support_navbar.html' %}
+    {% endif %}
+
+    <a href="{% url 'logout' %}">Logout</a>
+
+    {% block content %}
+    {% endblock %}
+
+    footer...
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Provider Dashboard</h1>
+
+<p>Welcome {{ request.user.name }}</p>
+
+<h3>Provider Actions</h3>
+
+<ul>
+    <li><a href="{% url 'create_service' %}">Create New Service</a></li>
+    <li><a href="{% url 'provider_services' %}">My Services</a></li>
+    <li><a href="{% url 'provider_bookings' %}">Service Bookings</a></li>
+    <li><a href="{% url 'provider_earnings' %}">My Earnings</a></li>
+    <li><a href="{% url 'manage_availability' %}">My Availability</a></li>
+    <li><a href="{% url 'my_tickets' %}">My Support Tickets</a></li>
+    <li><a href="{% url 'create_ticket' %}">Raise a Support Ticket</a></li>
+</ul>
+
+{% endblock %}

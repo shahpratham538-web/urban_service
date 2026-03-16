@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Platform Analytics</h2>
+
+<table border="1">
+    <tr><td><strong>Total Users</strong></td><td>{{ total_users }}</td></tr>
+    <tr><td><strong>Providers</strong></td><td>{{ total_providers }}</td></tr>
+    <tr><td><strong>Residents</strong></td><td>{{ total_residents }}</td></tr>
+    <tr><td><strong>Total Services</strong></td><td>{{ total_services }}</td></tr>
+    <tr><td><strong>Total Bookings</strong></td><td>{{ total_bookings }}</td></tr>
+    <tr><td><strong>Completed Bookings</strong></td><td>{{ completed_bookings }}</td></tr>
+    <tr><td><strong>Pending Bookings</strong></td><td>{{ pending_bookings }}</td></tr>
+    <tr><td><strong>Total Revenue</strong></td><td>₹{{ total_revenue }}</td></tr>
+    <tr><td><strong>Open Tickets</strong></td><td>{{ open_tickets }}</td></tr>
+</table>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Edit Availability Slot</h2>
+
+<p>{{ slot.get_day_of_week_display }}: {{ slot.start_time }} – {{ slot.end_time }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'manage_availability' %}">Cancel</a>
+</form>
+
+{% endblock %}

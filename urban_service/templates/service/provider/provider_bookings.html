@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Service Bookings</h2>
+
+<table border="1">
+
+<tr>
+<th>Service</th>
+<th>Resident</th>
+<th>Status</th>
+<th>Booking Date</th>
+<th>Actions</th>
+</tr>
+
+{% for booking in bookings %}
+
+<tr>
+<td>{{ booking.service.serviceName }}</td>
+<td>{{ booking.resident.name }}</td>
+<td>{{ booking.get_status_display }}</td>
+<td>{{ booking.booking_date }}</td>
+
+<td>
+    {% if booking.status == 'pending' %}
+        <a href="{% url 'update_booking_status' booking.id 'accepted' %}">Accept</a> |
+        <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" style="color:red;">Cancel</a>
+    {% elif booking.status == 'accepted' %}
+        <a href="{% url 'update_booking_status' booking.id 'in_progress' %}">Start Work</a> |
+        <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" style="color:red;">Cancel</a>
+    {% elif booking.status == 'in_progress' %}
+        <a href="{% url 'update_booking_status' booking.id 'completed' %}">Mark Complete</a>
+    {% else %}
+        {{ booking.get_status_display }}
+    {% endif %}
+
+    <br>
+    <a href="{% url 'booking_conversation' booking.id %}">💬 Messages</a>
+</td>
+</tr>
+
+{% empty %}
+<tr>
+    <td colspan="5">No bookings yet.</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Resident Dashboard</h1>
+
+<p>Welcome {{ request.user.name }}</p>
+
+<h3>Resident Actions</h3>
+
+<ul>
+    <li><a href="{% url 'list_services' %}">Browse Services</a></li>
+    <li><a href="{% url 'resident_bookings' %}">My Bookings</a></li>
+    <li><a href="{% url 'my_tickets' %}">My Support Tickets</a></li>
+    <li><a href="{% url 'create_ticket' %}">Raise a Support Ticket</a></li>
+    <li><a href="{% url 'payment_history' %}">My Payment History</a></li>
+</ul>
+
+{% endblock %}

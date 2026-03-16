@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>My Availability Schedule</h2>
+
+<h3>Add New Slot</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Slot</button>
+</form>
+
+<hr>
+
+<h3>Current Schedule</h3>
+
+<table border="1">
+<tr>
+    <th>Day</th>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th>Available</th>
+    <th>Actions</th>
+</tr>
+{% for slot in slots %}
+<tr>
+    <td>{{ slot.get_day_of_week_display }}</td>
+    <td>{{ slot.start_time }}</td>
+    <td>{{ slot.end_time }}</td>
+    <td>{{ slot.is_available|yesno:"Yes,No" }}</td>
+    <td>
+        <a href="{% url 'edit_availability' slot.id %}">Edit</a> |
+        <a href="{% url 'delete_availability' slot.id %}" style="color:red;">Delete</a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5">No availability slots set. Add one above!</td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Leave a Review</h2>
+
+<p><strong>Service:</strong> {{ booking.service.serviceName }}</p>
+<p><strong>Provider:</strong> {{ booking.service.provider.name }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Review</button>
+    <a href="{% url 'resident_bookings' %}">Cancel</a>
+</form>
+
+{% endblock %}
