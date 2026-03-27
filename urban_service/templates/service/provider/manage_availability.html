@@ -1,44 +1,111 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="max-w-5xl mx-auto mb-12">
+    <div class="mb-8">
+        <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Provider Hub</span>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">MANAGE AVAILABILITY</h2>
+        <p class="text-slate-400 mt-2">Add your workable hours so residents know when to book you.</p>
+    </div>
 
-<h2>My Availability Schedule</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Add Slot Form -->
+        <div class="col-span-1 lg:col-span-1">
+            <div class="bg-surface-container-low p-6 rounded-2xl border border-surface-container shadow-2xl sticky top-6">
+                <h3 class="font-headline text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">add_circle</span> Add New Slot
+                </h3>
+                
+                <form method="post" class="space-y-4">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                    <div class="flex flex-col">
+                        <label class="font-bold text-slate-300 mb-1 text-sm" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="[&>input]:w-full [&>input]:bg-surface-container-high [&>input]:text-white [&>input]:border [&>input]:border-surface-variant [&>input]:rounded-xl [&>input]:px-4 [&>input]:py-2.5 [&>input]:focus:border-primary [&>input]:focus:ring-1 [&>input]:focus:ring-primary [&>input]:transition-all
+                                    [&>select]:w-full [&>select]:bg-surface-container-high [&>select]:text-white [&>select]:border [&>select]:border-surface-variant [&>select]:rounded-xl [&>select]:px-4 [&>select]:py-2.5 [&>select]:focus:border-primary [&>select]:focus:ring-1 [&>select]:focus:ring-primary [&>select]:transition-all
+                                    <!-- Checkbox styling -->
+                                    [&>input[type=checkbox]]:w-auto [&>input[type=checkbox]]:h-5 [&>input[type=checkbox]]:w-5 [&>input[type=checkbox]]:text-primary [&>input[type=checkbox]]:bg-surface-container-high [&>input[type=checkbox]]:border-surface-variant [&>input[type=checkbox]]:rounded">
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <p class="text-xs text-red-500 mt-1 font-bold">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="w-full mt-4 flex items-center justify-center gap-2 py-3 bg-primary-container hover:bg-primary text-white font-bold tracking-wider rounded-xl transition-all shadow-lg shadow-primary-container/20">
+                        <span>Save Slot</span>
+                    </button>
+                </form>
+            </div>
+        </div>
 
-<h3>Add New Slot</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Slot</button>
-</form>
-
-<hr>
-
-<h3>Current Schedule</h3>
-
-<table border="1">
-<tr>
-    <th>Day</th>
-    <th>Start Time</th>
-    <th>End Time</th>
-    <th>Available</th>
-    <th>Actions</th>
-</tr>
-{% for slot in slots %}
-<tr>
-    <td>{{ slot.get_day_of_week_display }}</td>
-    <td>{{ slot.start_time }}</td>
-    <td>{{ slot.end_time }}</td>
-    <td>{{ slot.is_available|yesno:"Yes,No" }}</td>
-    <td>
-        <a href="{% url 'edit_availability' slot.id %}">Edit</a> |
-        <a href="{% url 'delete_availability' slot.id %}" style="color:red;">Delete</a>
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="5">No availability slots set. Add one above!</td>
-</tr>
-{% endfor %}
-</table>
-
+        <!-- Schedule Table -->
+        <div class="col-span-1 lg:col-span-2">
+            <div class="bg-surface-container-low rounded-2xl border border-surface-container overflow-hidden shadow-2xl">
+                <div class="p-6 border-b border-surface-container flex items-center gap-2 bg-surface-container-high/30">
+                    <span class="material-symbols-outlined text-tertiary">calendar_month</span>
+                    <h3 class="font-headline text-xl font-bold text-white">Current Schedule</h3>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                                <th class="p-4 border-b border-surface-container">Day</th>
+                                <th class="p-4 border-b border-surface-container">Time Slot</th>
+                                <th class="p-4 border-b border-surface-container text-center">Available</th>
+                                <th class="p-4 border-b border-surface-container text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-surface-container">
+                            {% for slot in slots %}
+                            <tr class="hover:bg-surface-container-high/50 transition-colors">
+                                <td class="p-4">
+                                    <span class="font-bold text-white">{{ slot.get_day_of_week_display }}</span>
+                                </td>
+                                <td class="p-4">
+                                    <div class="flex items-center gap-2 text-slate-300">
+                                        <span class="material-symbols-outlined text-[16px]">schedule</span>
+                                        {{ slot.start_time|time:"h:i A" }} - {{ slot.end_time|time:"h:i A" }}
+                                    </div>
+                                </td>
+                                <td class="p-4 text-center">
+                                    {% if slot.is_available %}
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                            <span class="material-symbols-outlined py-[2px] px-[2px] text-[18px]">check</span>
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-500/20 text-red-500 border border-red-500/30">
+                                            <span class="material-symbols-outlined py-[2px] px-[2px] text-[18px]">close</span>
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="{% url 'edit_availability' slot.id %}" class="w-8 h-8 flex items-center justify-center rounded bg-surface-container-high hover:bg-surface-variant text-slate-400 hover:text-white transition-colors" title="Edit">
+                                            <span class="material-symbols-outlined text-[16px]">edit</span>
+                                        </a>
+                                        <a href="{% url 'delete_availability' slot.id %}" class="w-8 h-8 flex items-center justify-center rounded bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white transition-colors" title="Delete">
+                                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="p-8 text-center text-slate-500">
+                                    <span class="material-symbols-outlined text-4xl mb-2">event_busy</span>
+                                    <p>No availability slots set. Add your first slot!</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -1,45 +1,40 @@
-<div style="background:#ddd; padding:10px;">
+<!-- Resident Sidebar Navigation -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-[#ff7a3d] bg-[#ff7a3d]/10 transition-all duration-300" href="{% url 'resident_dashboard' %}">
+    <span class="material-symbols-outlined">grid_view</span>
+    <span class="font-['Manrope'] font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'list_services' %}">
+    <span class="material-symbols-outlined">search</span>
+    <span class="font-['Manrope'] font-medium">Browse Services</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'resident_bookings' %}">
+    <span class="material-symbols-outlined">calendar_month</span>
+    <span class="font-['Manrope'] font-medium">My Bookings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'order_history' %}">
+    <span class="material-symbols-outlined">history</span>
+    <span class="font-['Manrope'] font-medium">Order History</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'payment_history' %}">
+    <span class="material-symbols-outlined">receipt_long</span>
+    <span class="font-['Manrope'] font-medium">Payment History</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'my_tickets' %}">
+    <span class="material-symbols-outlined">confirmation_number</span>
+    <span class="font-['Manrope'] font-medium">Support Tickets</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'create_ticket' %}">
+    <span class="material-symbols-outlined">add_circle</span>
+    <span class="font-['Manrope'] font-medium">Report Issue</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'notification_list' %}">
+    <span class="material-symbols-outlined">notifications</span>
+    <span class="font-['Manrope'] font-medium">Notifications</span>
+</a>
 
-    <h3>Resident Menu</h3>
-
-    <ul>
-
-        <li>
-            <a href="{% url 'resident_dashboard' %}">
-                Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'list_services' %}">
-                Browse Services
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'resident_bookings' %}">
-                My Bookings
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'payment_history' %}">
-                Payment History
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'my_tickets' %}">
-                Support Tickets
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'logout' %}">
-                Logout
-            </a>
-        </li>
-
-    </ul>
-
+<div class="mt-auto pt-6 border-t border-[#092b4b] mx-4">
+    <a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-500 hover:text-error hover:bg-error-container/10 transition-all duration-300" href="{% url 'logout' %}">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-['Manrope'] font-medium">Logout</span>
+    </a>
 </div>

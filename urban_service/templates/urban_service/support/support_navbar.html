@@ -1,27 +1,24 @@
-<div style="background:#ddd; padding:10px;">
+<!-- Support Sidebar Navigation -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-md {% if request.resolver_match.url_name == 'support_dashboard' %}text-[#ff7a3d] bg-[#ff7a3d]/10{% else %}text-slate-400 hover:text-white hover:bg-[#092b4b]{% endif %} transition-all duration-300" href="{% url 'support_dashboard' %}">
+    <span class="material-symbols-outlined">grid_view</span>
+    <span class="font-['Manrope'] font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md {% if request.resolver_match.url_name == 'support_tickets' %}text-cyan-400 bg-cyan-500/10{% else %}text-slate-400 hover:text-white hover:bg-[#092b4b]{% endif %} transition-all duration-300" href="{% url 'support_tickets' %}">
+    <span class="material-symbols-outlined">confirmation_number</span>
+    <span class="font-['Manrope'] font-medium">All Tickets</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md {% if request.resolver_match.url_name == 'support_quality_monitor' %}text-indigo-400 bg-indigo-500/10{% else %}text-slate-400 hover:text-white hover:bg-[#092b4b]{% endif %} transition-all duration-300" href="{% url 'support_quality_monitor' %}">
+    <span class="material-symbols-outlined">monitoring</span>
+    <span class="font-['Manrope'] font-medium">Quality Monitor</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md {% if request.resolver_match.url_name == 'notification_list' %}text-purple-400 bg-purple-500/10{% else %}text-slate-400 hover:text-white hover:bg-[#092b4b]{% endif %} transition-all duration-300" href="{% url 'notification_list' %}">
+    <span class="material-symbols-outlined">notifications</span>
+    <span class="font-['Manrope'] font-medium">Notifications</span>
+</a>
 
-    <h3>Support Team</h3>
-
-    <ul>
-
-        <li>
-            <a href="{% url 'support_dashboard' %}">
-                Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'support_tickets' %}">
-                All Tickets
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'logout' %}">
-                Logout
-            </a>
-        </li>
-
-    </ul>
-
+<div class="mt-auto pt-6 border-t border-[#092b4b] mx-4">
+    <a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-500 hover:text-error hover:bg-error-container/10 transition-all duration-300" href="{% url 'logout' %}">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-['Manrope'] font-medium">Logout</span>
+    </a>
 </div>

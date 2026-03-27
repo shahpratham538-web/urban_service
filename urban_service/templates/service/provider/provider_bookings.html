@@ -1,51 +1,91 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="mb-8">
+        <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Provider Hub</span>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">SERVICE BOOKINGS</h2>
+    </div>
 
-<h2>Service Bookings</h2>
+    <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-high text-slate-300 text-sm uppercase tracking-wider font-['Space_Grotesk']">
+                        <th class="p-4 font-bold border-b border-surface-container">Service</th>
+                        <th class="p-4 font-bold border-b border-surface-container">Resident</th>
+                        <th class="p-4 font-bold border-b border-surface-container">Status</th>
+                        <th class="p-4 font-bold border-b border-surface-container">Booking Date</th>
+                        <th class="p-4 font-bold border-b border-surface-container text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    {% for booking in bookings %}
+                    <tr class="hover:bg-surface-container-high/50 transition-colors">
+                        <td class="p-4">
+                            <p class="font-bold text-white text-lg">{{ booking.service.serviceName }}</p>
+                            <p class="text-xs text-slate-400 mt-1">ID: #{{ booking.id }}</p>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400 text-lg">person</span>
+                                <span class="text-slate-300">{{ booking.resident.name }}</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            {% if booking.status == 'pending' %}
+                                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 uppercase tracking-widest">Pending</span>
+                            {% elif booking.status == 'accepted' %}
+                                <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold border border-blue-500/30 uppercase tracking-widest">Accepted</span>
+                            {% elif booking.status == 'in_progress' %}
+                                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold border border-purple-500/30 uppercase tracking-widest">In Progress</span>
+                            {% elif booking.status == 'completed' %}
+                                <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 uppercase tracking-widest">Completed</span>
+                            {% elif booking.status == 'cancelled' %}
+                                <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30 uppercase tracking-widest">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            <p class="text-slate-300">{{ booking.booking_date|date:"M d, Y" }}</p>
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex flex-col items-end gap-2">
+                                
+                                <div class="flex gap-2">
+                                    {% if booking.status == 'pending' %}
+                                        <a href="{% url 'update_booking_status' booking.id 'accepted' %}" class="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded border border-blue-500/30 transition-colors text-xs font-bold uppercase">Accept</a>
+                                        <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded border border-red-500/30 transition-colors text-xs font-bold uppercase">Cancel</a>
+                                    {% elif booking.status == 'accepted' %}
+                                        <a href="{% url 'update_booking_status' booking.id 'in_progress' %}" class="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded border border-purple-500/30 transition-colors text-xs font-bold uppercase">Start Work</a>
+                                        <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" class="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded border border-red-500/30 transition-colors text-xs font-bold uppercase">Cancel</a>
+                                    {% elif booking.status == 'in_progress' %}
+                                        <a href="{% url 'update_booking_status' booking.id 'completed' %}" class="px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded border border-emerald-500/30 transition-colors text-xs font-bold uppercase">Mark Complete</a>
+                                    {% endif %}
+                                </div>
 
-<table border="1">
+                                <!-- Message Link -->
+                                <a href="{% url 'booking_conversation' booking.id %}" class="group inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-container/10 hover:bg-primary-container text-primary-container hover:text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 border border-primary-container/30 hover:border-primary-container shadow-[0_0_15px_rgba(255,122,61,0)] hover:shadow-[0_0_15px_rgba(255,122,61,0.4)] w-fit mt-1">
+                                    <span class="material-symbols-outlined text-[18px]">forum</span>
+                                    <span>Message</span>
+                                </a>
 
-<tr>
-<th>Service</th>
-<th>Resident</th>
-<th>Status</th>
-<th>Booking Date</th>
-<th>Actions</th>
-</tr>
-
-{% for booking in bookings %}
-
-<tr>
-<td>{{ booking.service.serviceName }}</td>
-<td>{{ booking.resident.name }}</td>
-<td>{{ booking.get_status_display }}</td>
-<td>{{ booking.booking_date }}</td>
-
-<td>
-    {% if booking.status == 'pending' %}
-        <a href="{% url 'update_booking_status' booking.id 'accepted' %}">Accept</a> |
-        <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" style="color:red;">Cancel</a>
-    {% elif booking.status == 'accepted' %}
-        <a href="{% url 'update_booking_status' booking.id 'in_progress' %}">Start Work</a> |
-        <a href="{% url 'update_booking_status' booking.id 'cancelled' %}" style="color:red;">Cancel</a>
-    {% elif booking.status == 'in_progress' %}
-        <a href="{% url 'update_booking_status' booking.id 'completed' %}">Mark Complete</a>
-    {% else %}
-        {{ booking.get_status_display }}
-    {% endif %}
-
-    <br>
-    <a href="{% url 'booking_conversation' booking.id %}">💬 Messages</a>
-</td>
-</tr>
-
-{% empty %}
-<tr>
-    <td colspan="5">No bookings yet.</td>
-</tr>
-{% endfor %}
-
-</table>
-
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-400">
+                            <div class="flex flex-col items-center gap-4">
+                                <span class="material-symbols-outlined text-6xl text-surface-container-highest">calendar_month</span>
+                                <p class="text-lg">No bookings yet.</p>
+                                <p class="text-sm">When residents book your services, they will appear here.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 {% endblock %}

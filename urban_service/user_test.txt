@@ -1,0 +1,44 @@
+============================================================
+  Urban Service Platform — Test Login Credentials
+============================================================
+
+1. ADMIN
+   Email:    admin@test.com
+   Password: admin123456
+   Dashboard: /admin-dashboard/
+
+2. PROVIDER
+   Email:    provider@test.com
+   Password: provider123456
+   Dashboard: /provider-dashboard/
+
+3. RESIDENT
+   Email:    resident@test.com
+   Password: resident123456
+   Dashboard: /resident-dashboard/
+
+4. SUPPORT
+   Email:    support@test.com
+   Password: support123456
+   Dashboard: /support-dashboard/
+
+============================================================
+  Login URL: http://127.0.0.1:8000/login/
+============================================================
+
+--- NEW SEEDED PROVIDERS ---
+
+5. PROVIDER (Plumber - Raj Kumar)
+   Email:    plumber@test.com
+   Password: provider123456
+   Dashboard: /provider-dashboard/
+
+6. PROVIDER (House Cleaning - Priya Sharma)
+   Email:    cleaner@test.com
+   Password: provider123456
+   Dashboard: /provider-dashboard/
+
+7. PROVIDER (Electrician - Amit Patel)
+   Email:    electrician@test.com
+   Password: provider123456
+   Dashboard: /provider-dashboard/

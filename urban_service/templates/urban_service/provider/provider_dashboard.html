@@ -1,21 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div>
+            <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Provider Hub</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">MY DASHBOARD</h2>
+        </div>
+    </div>
 
-<h1>Provider Dashboard</h1>
-
-<p>Welcome {{ request.user.name }}</p>
-
-<h3>Provider Actions</h3>
-
-<ul>
-    <li><a href="{% url 'create_service' %}">Create New Service</a></li>
-    <li><a href="{% url 'provider_services' %}">My Services</a></li>
-    <li><a href="{% url 'provider_bookings' %}">Service Bookings</a></li>
-    <li><a href="{% url 'provider_earnings' %}">My Earnings</a></li>
-    <li><a href="{% url 'manage_availability' %}">My Availability</a></li>
-    <li><a href="{% url 'my_tickets' %}">My Support Tickets</a></li>
-    <li><a href="{% url 'create_ticket' %}">Raise a Support Ticket</a></li>
-</ul>
-
+    <div class="flex items-center justify-between mb-8">
+        <h3 class="font-headline text-2xl font-bold text-white">Quick Actions</h3>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <a href="{% url 'create_service' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-primary-container">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary-container text-3xl">add_circle</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-primary transition-colors text-lg">Create New Service</h4>
+                <p class="text-slate-400 text-sm mt-1">List a new urban service offering.</p>
+            </div>
+        </a>
+        <a href="{% url 'provider_services' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-tertiary">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-tertiary text-3xl">list_alt</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-tertiary transition-colors text-lg">My Services</h4>
+                <p class="text-slate-400 text-sm mt-1">View and manage your active listings.</p>
+            </div>
+        </a>
+        <a href="{% url 'provider_bookings' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-emerald-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-emerald-500 text-3xl">event_available</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-emerald-400 transition-colors text-lg">Service Bookings</h4>
+                <p class="text-slate-400 text-sm mt-1">See your upcoming appointments and requests.</p>
+            </div>
+        </a>
+        <a href="{% url 'manage_availability' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-purple-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-purple-500 text-3xl">event_busy</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-purple-400 transition-colors text-lg">My Availability</h4>
+                <p class="text-slate-400 text-sm mt-1">Set blackout dates and available hours.</p>
+            </div>
+        </a>
+        <a href="{% url 'provider_earnings' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-amber-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-amber-500 text-3xl">account_balance_wallet</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-amber-400 transition-colors text-lg">My Earnings</h4>
+                <p class="text-slate-400 text-sm mt-1">Track your revenue and payouts.</p>
+            </div>
+        </a>
+        <a href="{% url 'provider_reviews' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-blue-400">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-blue-400 text-3xl">star_rate</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-blue-300 transition-colors text-lg">My Reviews</h4>
+                <p class="text-slate-400 text-sm mt-1">See feedback from your clients.</p>
+            </div>
+        </a>
+    </div>
+</section>
 {% endblock %}

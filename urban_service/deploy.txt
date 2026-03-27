@@ -1,0 +1,138 @@
+=========================================
+URBAN SERVICE PLATFORM - RENDER DEPLOYMENT
+=========================================
+
+To deploy the Urban Service Django application as a production-ready website on Render, you need to prepare the codebase by adding a few essential packages and configuration files.
+
+Follow these step-by-step instructions:
+
+-----------------------------------------
+STEP 1: Install Production Dependencies
+-----------------------------------------
+Run the following commands in your terminal (with your virtual environment active):
+
+pip install gunicorn
+pip install dj-database-url
+pip install psycopg2-binary
+pip install whitenoise
+
+Then, freeze your dependencies so Render knows what to install:
+pip freeze > requirements.txt
+
+-----------------------------------------
+STEP 2: Update settings.py
+-----------------------------------------
+Open `urban_service/settings.py` and make the following changes:
+
+1. Import `dj_database_url` and `os` at the top:
+   import os
+   import dj_database_url
+
+2. Change DEBUG to False for production (Keep it True only for local):
+   DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+3. Update ALLOWED_HOSTS to allow your Render URL:
+   ALLOWED_HOSTS = ['*'] # Or restrict it to your '[your-app-name].onrender.com'
+
+4. Add WhiteNoise to your MIDDLEWARE (must be right under SecurityMiddleware):
+   MIDDLEWARE = [
+       'django.middleware.security.SecurityMiddleware',
+       'whitenoise.middleware.WhiteNoiseMiddleware', # ADD THIS LINE
+       # ... other middleware
+   ]
+
+5. Update the Database configuration to use Render's PostgreSQL:
+   # Keep the local SQLite/PostgreSQL fallback, but use the DATABASE_URL env var if it exists
+   if 'DATABASE_URL' in os.environ:
+       DATABASES = {
+           'default': dj_database_url.config(
+               default=os.environ.get('DATABASE_URL'),
+               conn_max_age=600,
+               conn_health_checks=True,
+           )
+       }
+   else:
+       # Your existing local database config goes here
+       DATABASES = {
+           'default': {
+               'ENGINE': 'django.db.backends.postgresql',
+               'NAME': 'urban_service',
+               # ...
+           }
+       }
+
+6. Configure Static Files for Production:
+   STATIC_URL = '/static/'
+   STATICFILES_DIRS = [BASE_DIR / "static"]
+   STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+   # Enable WhiteNoise compression and caching
+   STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+-----------------------------------------
+STEP 3: Create a Build Script
+-----------------------------------------
+In the root directory of your project (same level as manage.py), create a file named `build.sh` with the following content:
+
+```bash
+#!/usr/bin/env bash
+# exit on error
+set -o errexit
+
+python -m pip install -r requirements.txt
+
+python manage.py collectstatic --no-input
+python manage.py migrate
+```
+
+Make sure the script is executable (if you are on Linux/Mac, run `chmod a+x build.sh` in the terminal. On Windows, Render handles this automatically).
+
+-----------------------------------------
+STEP 3: Push Code to GitHub
+-----------------------------------------
+1. Ensure all your changes (`requirements.txt`, `settings.py`, `build.sh`) are saved.
+2. Open your terminal and run:
+   git add .
+   git commit -m "Configure for Render Deployment"
+   git push origin main
+   (Or push to whichever branch you use for production)
+
+-----------------------------------------
+STEP 4: Deploy on Render Dashboard
+-----------------------------------------
+Follow these exact steps in the Render Dashboard to deploy your site:
+
+1. Log in to https://dashboard.render.com/
+2. Click the "New" button in the top right and select "Web Service".
+3. Connect your GitHub repository containing the Urban Service code.
+4. Fill in the specific deployment details:
+   - Name: urban-service-app (or any name you prefer)
+   - Environment: Python
+   - Region: Choose the one closest to your users (e.g., Singapore).
+   - Branch: main (or whichever branch you pushed to)
+   - Build Command: ./build.sh
+   - Start Command: gunicorn urban_service.wsgi:application
+
+5. Set Environment Variables:
+   Scroll down and click on "Advanced", then click "Add Environment Variable" to add the following exactly as written:
+
+   Variable 1:
+   - Key: DATABASE_URL
+   - Value: postgresql://prod_urbanservice_db_user:VHngVrNAG4FOooYtOZeVwGSJ6QZwkF0c@dpg-d73424c2kvos7387jt1g-a.singapore-postgres.render.com/prod_urbanservice_db
+   
+   Variable 2:
+   - Key: SECRET_KEY
+   - Value: (Create a secure, random string here without spaces, e.g., your_random_secret_sequence_1234!)
+   
+   Variable 3:
+   - Key: DEBUG
+   - Value: False
+
+   Variable 4:
+   - Key: PYTHON_VERSION
+   - Value: 3.11.0 (or whatever version you are using locally, like 3.12.0)
+
+6. Click "Create Web Service" at the bottom!
+
+Render will now download your code, run the build script (to install packages, collect static files, and migrate your database), and boot up your app using Gunicorn.
+
+When the build is complete, you will see a green "Live" status, and you can access your stunning new Urban Service Platform via the provided `.onrender.com` URL!

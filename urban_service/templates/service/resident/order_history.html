@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Order History</h1>
+
+{% if bookings %}
+<table border="1" cellpadding="8" cellspacing="0" width="100%">
+    <tr>
+        <th>Service</th>
+        <th>Provider</th>
+        <th>Booked On</th>
+        <th>Scheduled</th>
+        <th>Status</th>
+        <th>Payment</th>
+        <th>Review</th>
+        <th>Actions</th>
+    </tr>
+    {% for booking in bookings %}
+    <tr>
+        <td>{{ booking.service.serviceName }}</td>
+        <td>{{ booking.service.provider.name }}</td>
+        <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+        <td>{{ booking.scheduled_date|date:"M d, Y H:i"|default:"Not set" }}</td>
+        <td>{{ booking.get_status_display }}</td>
+        <td>
+            {% if booking.payment %}
+                ₹{{ booking.payment.amount }} — {{ booking.payment.get_status_display }}
+            {% else %}
+                {% if booking.status == 'completed' %}
+                    <a href="{% url 'make_payment' booking.id %}">Pay Now</a>
+                {% else %}
+                    —
+                {% endif %}
+            {% endif %}
+        </td>
+        <td>
+            {% if booking.review %}
+                {{ booking.review.rating }} ★
+            {% else %}
+                {% if booking.status == 'completed' %}
+                    <a href="{% url 'submit_review' booking.id %}">Leave Review</a>
+                {% else %}
+                    —
+                {% endif %}
+            {% endif %}
+        </td>
+        <td>
+            <a href="{% url 'booking_conversation' booking.id %}">Messages</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No orders yet. <a href="{% url 'list_services' %}">Browse services</a> to get started.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'resident_dashboard' %}">&larr; Back to Dashboard</a>
+
+{% endblock %}

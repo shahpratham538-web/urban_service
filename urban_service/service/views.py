@@ -1,11 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib import messages
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Avg
+from django.core.paginator import Paginator
 
 from core.decorators import role_required
-from .forms import ServiceCreationForm, BookingForm, ReviewForm, TicketForm, AvailabilityForm, MessageForm
-from .models import Booking, Service, Review, Payment, Ticket, Category, ProviderAvailability, Message
+from .forms import (
+    ServiceCreationForm, BookingForm, ReviewForm,
+    TicketForm, AvailabilityForm, MessageForm, SiteSettingsForm,
+)
+from .models import (
+    Booking, Service, Review, Payment, Ticket, Category,
+    ProviderAvailability, Message, Notification, SiteSettings,
+    create_notification,
+)
 
 
 # ==========================================================================
@@ -67,7 +75,7 @@ def updateBookingStatus(request, booking_id, status):
     """Only the provider who owns the service can update the booking status."""
     booking = get_object_or_404(Booking, id=booking_id)
 
-    # Ownership check — the logged‑in provider must own the service
+    # Ownership check
     if booking.service.provider != request.user:
         return HttpResponseForbidden("You are not allowed to update this booking.")
 
@@ -76,12 +84,20 @@ def updateBookingStatus(request, booking_id, status):
         booking.status = status
         booking.save()
 
+        # Notify resident about booking status change
+        create_notification(
+            user=booking.resident,
+            message=f'Your booking for "{booking.service.serviceName}" has been {status}.',
+            notification_type='booking',
+            link=f'/service/my-bookings/',
+        )
+
     return redirect("provider_bookings")
 
 
 @role_required(allowed_roles=['provider'])
 def providerEarnings(request):
-    """Show a summary of the provider's completed‑booking earnings."""
+    """Show a summary of the provider's completed-booking earnings."""
     paid_bookings = Payment.objects.filter(
         booking__service__provider=request.user,
         status='completed',
@@ -140,6 +156,21 @@ def deleteAvailability(request, slot_id):
     return render(request, "service/provider/delete_availability.html", {"slot": slot})
 
 
+@role_required(allowed_roles=['provider'])
+def providerReviews(request):
+    """Provider sees all reviews across their services with average rating."""
+    reviews = Review.objects.filter(
+        booking__service__provider=request.user
+    ).select_related('booking__service', 'booking__resident').order_by('-created_at')
+
+    avg_rating = reviews.aggregate(avg=Avg('rating'))['avg']
+
+    return render(request, "service/provider/provider_reviews.html", {
+        "reviews": reviews,
+        "avg_rating": avg_rating,
+    })
+
+
 # ==========================================================================
 #  RESIDENT VIEWS
 # ==========================================================================
@@ -171,6 +202,15 @@ def bookService(request, service_id):
             booking.service = service
             booking.resident = request.user
             booking.save()
+
+            # Notify provider about new booking
+            create_notification(
+                user=service.provider,
+                message=f'New booking from {request.user.name} for "{service.serviceName}".',
+                notification_type='booking',
+                link='/service/provider-bookings/',
+            )
+
             return redirect("resident_bookings")
     else:
         form = BookingForm()
@@ -192,7 +232,6 @@ def submitReview(request, booking_id):
     """Resident submits a review for a completed booking."""
     booking = get_object_or_404(Booking, id=booking_id, resident=request.user)
 
-    # Can only review completed bookings that don't already have a review
     if booking.status != 'completed' or hasattr(booking, 'review'):
         return redirect("resident_bookings")
 
@@ -202,6 +241,15 @@ def submitReview(request, booking_id):
             review = form.save(commit=False)
             review.booking = booking
             review.save()
+
+            # Notify provider about new review
+            create_notification(
+                user=booking.service.provider,
+                message=f'{request.user.name} left a {review.rating}★ review for "{booking.service.serviceName}".',
+                notification_type='booking',
+                link='/service/provider-reviews/',
+            )
+
             return redirect("resident_bookings")
     else:
         form = ReviewForm()
@@ -209,6 +257,18 @@ def submitReview(request, booking_id):
     return render(request, "service/resident/review_form.html", {
         "form": form,
         "booking": booking,
+    })
+
+
+@role_required(allowed_roles=['resident'])
+def orderHistory(request):
+    """Unified order history: bookings with payment and review info."""
+    bookings = Booking.objects.filter(
+        resident=request.user
+    ).select_related('service', 'service__provider').prefetch_related('payment', 'review').order_by('-booking_date')
+
+    return render(request, "service/resident/order_history.html", {
+        "bookings": bookings,
     })
 
 
@@ -225,6 +285,18 @@ def createTicket(request):
             ticket = form.save(commit=False)
             ticket.raised_by = request.user
             ticket.save()
+
+            # Notify support team
+            from core.models import User as UserModel
+            support_users = UserModel.objects.filter(role='support', is_active=True)
+            for su in support_users:
+                create_notification(
+                    user=su,
+                    message=f'New ticket raised: "{ticket.subject}" by {request.user.name}.',
+                    notification_type='ticket',
+                    link='/service/support-tickets/',
+                )
+
             return redirect("my_tickets")
     else:
         form = TicketForm()
@@ -254,7 +326,47 @@ def updateTicketStatus(request, ticket_id, status):
         ticket.status = status
         ticket.assigned_to = request.user
         ticket.save()
+
+        # Notify the ticket raiser
+        create_notification(
+            user=ticket.raised_by,
+            message=f'Your ticket "{ticket.subject}" has been updated to: {status}.',
+            notification_type='ticket',
+            link='/service/my-tickets/',
+        )
+
     return redirect("support_tickets")
+
+
+@role_required(allowed_roles=['support'])
+def supportQualityMonitor(request):
+    """Support dashboard for monitoring provider quality and complaint patterns."""
+    from core.models import User as UserModel
+
+    # Providers with avg ratings
+    providers = UserModel.objects.filter(role='provider', is_active=True).annotate(
+        avg_rating=Avg('services__bookings__review__rating'),
+        total_bookings=Count('services__bookings'),
+        total_reviews=Count('services__bookings__review'),
+    ).order_by('avg_rating')
+
+    # Low-rated reviews (≤ 2 stars)
+    low_reviews = Review.objects.filter(rating__lte=2).select_related(
+        'booking__service__provider', 'booking__resident'
+    ).order_by('-created_at')[:20]
+
+    # Ticket summary by priority
+    ticket_stats = {
+        'total_open': Ticket.objects.filter(status='open').count(),
+        'total_in_progress': Ticket.objects.filter(status='in_progress').count(),
+        'high_priority_open': Ticket.objects.filter(status='open', priority='high').count(),
+    }
+
+    return render(request, "service/support/quality_monitor.html", {
+        "providers": providers,
+        "low_reviews": low_reviews,
+        "ticket_stats": ticket_stats,
+    })
 
 
 # ==========================================================================
@@ -317,16 +429,59 @@ def adminAnalytics(request):
     return render(request, "service/admin/analytics.html", context)
 
 
+@role_required(allowed_roles=['admin'])
+def adminTicketList(request):
+    """Admin can view and manage all support tickets."""
+    tickets = Ticket.objects.all().order_by('-created_at')
+    return render(request, "service/admin/admin_ticket_list.html", {"tickets": tickets})
+
+
+@role_required(allowed_roles=['admin'])
+def adminUpdateTicketStatus(request, ticket_id, status):
+    """Admin can update any ticket's status."""
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    allowed = ['in_progress', 'resolved', 'closed']
+    if status in allowed:
+        ticket.status = status
+        ticket.save()
+
+        # Notify the ticket raiser
+        create_notification(
+            user=ticket.raised_by,
+            message=f'Your ticket "{ticket.subject}" has been updated to: {status} by admin.',
+            notification_type='ticket',
+            link='/service/my-tickets/',
+        )
+
+    return redirect("admin_ticket_list")
+
+
+@role_required(allowed_roles=['admin'])
+def adminSettings(request):
+    """Admin configures platform settings."""
+    settings_obj = SiteSettings.load()
+
+    if request.method == "POST":
+        form = SiteSettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Settings updated successfully.")
+            return redirect("admin_settings")
+    else:
+        form = SiteSettingsForm(instance=settings_obj)
+
+    return render(request, "service/admin/site_settings.html", {"form": form})
+
+
 # ==========================================================================
 #  PAYMENT VIEWS
 # ==========================================================================
 
 @role_required(allowed_roles=['resident'])
 def makePayment(request, booking_id):
-    """Simulate payment for an accepted booking."""
+    """Simulate payment for a completed booking."""
     booking = get_object_or_404(Booking, id=booking_id, resident=request.user)
 
-    # Only pay for completed bookings that don't already have a payment
     if booking.status != 'completed' or hasattr(booking, 'payment'):
         return redirect("resident_bookings")
 
@@ -341,6 +496,15 @@ def makePayment(request, booking_id):
             transaction_id=str(uuid.uuid4())[:12].upper(),
             paid_at=timezone.now(),
         )
+
+        # Notify provider about payment received
+        create_notification(
+            user=booking.service.provider,
+            message=f'Payment of ₹{booking.service.servicePrize} received for "{booking.service.serviceName}".',
+            notification_type='payment',
+            link='/service/provider-earnings/',
+        )
+
         return redirect("payment_success", booking_id=booking.id)
 
     return render(request, "service/resident/make_payment.html", {
@@ -390,7 +554,6 @@ def bookingConversation(request, booking_id):
     """Chat thread between resident and provider on a specific booking."""
     booking = get_object_or_404(Booking, id=booking_id)
 
-    # Only the resident or the provider of this booking can access
     if request.user != booking.resident and request.user != booking.service.provider:
         return HttpResponseForbidden("You are not part of this booking.")
 
@@ -401,6 +564,16 @@ def bookingConversation(request, booking_id):
             msg.booking = booking
             msg.sender = request.user
             msg.save()
+
+            # Notify the other party
+            recipient = booking.service.provider if request.user == booking.resident else booking.resident
+            create_notification(
+                user=recipient,
+                message=f'New message from {request.user.name} on booking "{booking.service.serviceName}".',
+                notification_type='message',
+                link=f'/service/conversation/{booking.id}/',
+            )
+
             return redirect("booking_conversation", booking_id=booking.id)
     else:
         form = MessageForm()
@@ -411,3 +584,44 @@ def bookingConversation(request, booking_id):
         "messages_list": messages_list,
         "form": form,
     })
+
+
+# ==========================================================================
+#  NOTIFICATION VIEWS
+# ==========================================================================
+
+def notificationList(request):
+    """Show all notifications for the logged-in user."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    notifications = Notification.objects.filter(user=request.user)
+    unread_count = notifications.filter(is_read=False).count()
+
+    return render(request, "service/notifications/notification_list.html", {
+        "notifications": notifications,
+        "unread_count": unread_count,
+    })
+
+
+def markNotificationRead(request, notification_id):
+    """Mark a single notification as read."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+
+    if notification.link:
+        return redirect(notification.link)
+    return redirect("notification_list")
+
+
+def markAllNotificationsRead(request):
+    """Mark all notifications as read for the current user."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    return redirect("notification_list")

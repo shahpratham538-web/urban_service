@@ -1,44 +1,95 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="max-w-7xl mx-auto mb-12">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <span class="text-cyan-400 text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Support Command</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">ALL SUPPORT TICKETS</h2>
+        </div>
+        <div>
+            <a href="{% url 'support_dashboard' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold bg-surface-container px-4 py-2 rounded-full border border-surface-container-high">
+                <span class="material-symbols-outlined text-[16px]">dashboard</span> Back to Mission Control
+            </a>
+        </div>
+    </div>
 
-<h2>All Support Tickets</h2>
-
-<table border="1">
-<tr>
-    <th>#</th>
-    <th>Subject</th>
-    <th>Raised By</th>
-    <th>Priority</th>
-    <th>Status</th>
-    <th>Created</th>
-    <th>Actions</th>
-</tr>
-{% for ticket in tickets %}
-<tr>
-    <td>{{ ticket.id }}</td>
-    <td>{{ ticket.subject }}<br><small>{{ ticket.description|truncatewords:20 }}</small></td>
-    <td>{{ ticket.raised_by.name }} ({{ ticket.raised_by.role }})</td>
-    <td>{{ ticket.priority }}</td>
-    <td>{{ ticket.status }}</td>
-    <td>{{ ticket.created_at }}</td>
-    <td>
-        {% if ticket.status == 'open' %}
-            <a href="{% url 'update_ticket_status' ticket.id 'in_progress' %}">Pick Up</a>
-        {% endif %}
-        {% if ticket.status == 'in_progress' %}
-            <a href="{% url 'update_ticket_status' ticket.id 'resolved' %}">Resolve</a>
-        {% endif %}
-        {% if ticket.status == 'resolved' %}
-            <a href="{% url 'update_ticket_status' ticket.id 'closed' %}">Close</a>
-        {% endif %}
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="7">No tickets found.</td>
-</tr>
-{% endfor %}
-</table>
-
+    <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                        <th class="p-4 border-b border-surface-container">Ticket ID</th>
+                        <th class="p-4 border-b border-surface-container">Subject & Description</th>
+                        <th class="p-4 border-b border-surface-container">Raised By</th>
+                        <th class="p-4 border-b border-surface-container text-center">Priority</th>
+                        <th class="p-4 border-b border-surface-container text-center">Status</th>
+                        <th class="p-4 border-b border-surface-container text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    {% for ticket in tickets %}
+                    <tr class="hover:bg-surface-container-high/50 transition-colors">
+                        <td class="p-4">
+                            <span class="text-white font-mono font-bold text-sm">#{{ ticket.id }}</span>
+                            <div class="text-xs text-slate-400 mt-1">{{ ticket.created_at|date:"M d, Y" }}</div>
+                        </td>
+                        <td class="p-4 max-w-xs">
+                            <p class="font-bold text-slate-200 line-clamp-1 truncate">{{ ticket.subject }}</p>
+                            <p class="text-xs text-slate-400 line-clamp-1 truncate mt-1">{{ ticket.description }}</p>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-white text-sm">{{ ticket.raised_by.name }}</span>
+                                <span class="text-[10px] text-tertiary uppercase tracking-widest font-bold mt-1">{{ ticket.raised_by.role }}</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center">
+                            {% if ticket.priority == 'high' %}
+                                <span class="inline-flex items-center gap-1 text-red-400 text-xs font-bold uppercase tracking-widest bg-red-500/10 border border-red-500/20 px-2 py-1 rounded"><span class="material-symbols-outlined text-[14px]">error</span> High</span>
+                            {% elif ticket.priority == 'medium' %}
+                                <span class="inline-flex items-center gap-1 text-amber-400 text-xs font-bold uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded"><span class="material-symbols-outlined text-[14px]">warning</span> Med</span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1 text-blue-400 text-xs font-bold uppercase tracking-widest bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded"><span class="material-symbols-outlined text-[14px]">info</span> Low</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-center">
+                            {% if ticket.status == 'open' %}
+                                <span class="px-2 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded text-[10px] font-bold uppercase tracking-widest">Open</span>
+                            {% elif ticket.status == 'in_progress' %}
+                                <span class="px-2 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-[10px] font-bold uppercase tracking-widest">In Progress</span>
+                            {% elif ticket.status == 'resolved' %}
+                                <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-bold uppercase tracking-widest">Resolved</span>
+                            {% else %}
+                                <span class="px-2 py-1 bg-surface-container-high text-slate-400 border border-surface-container rounded text-[10px] font-bold uppercase tracking-widest">{{ ticket.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                {% if ticket.status == 'open' %}
+                                    <a href="{% url 'update_ticket_status' ticket.id 'in_progress' %}" class="px-3 py-1 bg-rose-500/20 text-rose-400 hover:text-white hover:bg-rose-500 border border-rose-500/30 rounded text-xs font-bold uppercase tracking-widest transition-colors">Pick Up</a>
+                                {% endif %}
+                                {% if ticket.status == 'in_progress' %}
+                                    <a href="{% url 'update_ticket_status' ticket.id 'resolved' %}" class="px-3 py-1 bg-amber-500/20 text-amber-400 hover:text-white hover:bg-amber-500 border border-amber-500/30 rounded text-xs font-bold uppercase tracking-widest transition-colors">Resolve</a>
+                                {% endif %}
+                                {% if ticket.status == 'resolved' %}
+                                    <a href="{% url 'update_ticket_status' ticket.id 'closed' %}" class="px-3 py-1 bg-emerald-500/20 text-emerald-400 hover:text-white hover:bg-emerald-500 border border-emerald-500/30 rounded text-xs font-bold uppercase tracking-widest transition-colors">Close</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="p-12 text-center text-slate-500">
+                            <span class="material-symbols-outlined text-6xl mb-4 text-surface-container-highest">task</span>
+                            <h3 class="text-xl font-bold text-white mb-2">No Support Tickets</h3>
+                            <p class="text-sm">There are no support tickets available at the moment.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 {% endblock %}

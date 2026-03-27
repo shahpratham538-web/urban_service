@@ -1,6 +1,119 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+{% extends "base.html" %}
 
-    <button type="submit">Login</button>
-</form>
+{% block content %}
+<style>
+    /* Premium input styling */
+    .premium-form p {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    .premium-form label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #dfc0b4; /* on-surface-variant */
+        margin-bottom: 0.5rem;
+    }
+    .premium-form input, .premium-form select, .premium-form textarea {
+        width: 100%;
+        background-color: rgba(0, 32, 62, 0.6); /* surface-container #00203e */
+        border: 1px solid rgba(88, 66, 57, 0.5); /* outline-variant #584239 */
+        border-radius: 0.75rem;
+        color: #d2e4ff; /* on-surface */
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .premium-form input:focus, .premium-form select:focus, .premium-form textarea:focus {
+        outline: none;
+        border-color: #ff7a3d; /* primary-container */
+        box-shadow: 0 0 0 4px rgba(255, 122, 61, 0.15), inset 0 2px 4px rgba(0,0,0,0.2);
+        background-color: rgba(0, 32, 62, 0.9);
+    }
+    .premium-form .helptext {
+        font-size: 0.75rem;
+        color: #a78b80; /* outline */
+        margin-top: 0.25rem;
+        display: block;
+    }
+    .premium-form ul.errorlist {
+        color: #ffb4ab; /* error */
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        padding-left: 0;
+        list-style: none;
+    }
+</style>
+
+<main class="relative min-h-screen -mt-16 md:-mt-24 flex items-center justify-center p-4 sm:p-8 bg-[#000f21] overflow-hidden pt-24 pb-12">
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-[0%] left-[-10%] w-[50%] h-[50%] bg-[#ff7a3d]/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#51d7f4]/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="relative z-10 w-full max-w-5xl rounded-[2rem] overflow-hidden flex flex-col md:flex-row bg-[#001c37] border border-white/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] transform transition-all">
+        
+        <!-- Left Side: Form -->
+        <div class="w-full md:w-1/2 p-8 sm:p-12 lg:p-14 flex flex-col justify-center bg-[#00142a]">
+            <div class="mb-10">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary-container/10 text-primary-container mb-6 border border-primary-container/20 shadow-inner">
+                    <span class="material-symbols-outlined text-2xl">fingerprint</span>
+                </div>
+                <h1 class="font-headline font-extrabold text-3xl sm:text-4xl text-white tracking-tight mb-2">Welcome Back</h1>
+                <p class="text-slate-400 text-sm sm:text-base font-body">Enter your credentials to access your dashboard.</p>
+            </div>
+            
+            <form method="post" class="premium-form w-full">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                <div class="flex items-center justify-between mt-2 mb-8">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="checkbox" class="w-4 h-4 rounded border-[#584239] bg-[#00203e] text-[#ff7a3d] focus:ring-[#ff7a3d] focus:ring-offset-[#00142a] transition-colors">
+                        <span class="text-xs text-[#dfc0b4] group-hover:text-white transition-colors">Remember me</span>
+                    </label>
+                    <a href="{% url 'password_reset' %}" class="text-xs font-semibold text-[#51d7f4] hover:text-white transition-colors">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-[#652200] bg-[#FF7A3D] hover:bg-[#ff8a52] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#00142a] focus:ring-[#FF7A3D] overflow-hidden transition-all shadow-[0_0_20px_rgba(255,122,61,0.2)] hover:shadow-[0_0_25px_rgba(255,122,61,0.4)] active:scale-[0.98]">
+                    <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                    <span class="relative flex items-center gap-2">
+                        Sign In <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+                    </span>
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center pt-6 border-t border-white/5">
+                <p class="text-sm text-[#dfc0b4]">
+                    Don't have an account? 
+                    <a href="{% url 'signup' %}" class="font-bold text-[#ffb598] hover:text-[#ff7a3d] transition-colors border-b border-transparent hover:border-[#ff7a3d] pb-0.5">Create one now</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side: Imagery/Showcase -->
+        <div class="hidden md:block w-full md:w-1/2 relative bg-[#092b4b]">
+            <img class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtzSM7D78wSDvoaQ1K0Z-8kmEjDxA8wfXK3l6twgpOHdPUfH0vbiTVTBPAuI-dll43A_Wwz7TQqaA0MXHLtbzhssqthdA_mZHktjZxjyxzsQcyDShMaLMZhtyFaaioffnhP6H0o2x21gBSmnc_93YxfbQ4cSLRFiuKutp0BLtxKKbwUZGTRn0_QVq6frgF7mZXpFLLxYqgt1H4e2skiGFedFu_TszmSy1JeQIV4RCfxXGIgG7CHldJaQ2L1KHBPRTCUAZboSuaPg" alt="Smart City View" />
+            <!-- Overlay Gradients -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#00142a]/95 via-[#001c37]/80 to-transparent mix-blend-normal"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#000f21] via-transparent to-transparent opacity-80"></div>
+            <div class="absolute inset-0 bg-[#ff7a3d]/10 mix-blend-overlay"></div>
+            
+            <!-- Showcase Content -->
+            <div class="absolute inset-0 p-12 flex flex-col justify-end">
+                <div class="bg-surface-variant/20 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-2xl transform translate-y-4 hover:translate-y-0 transition-transform duration-500">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="material-symbols-outlined text-[#51d7f4]">security</span>
+                        <span class="text-xs font-bold text-[#51d7f4] uppercase tracking-widest">Enterprise Grade</span>
+                    </div>
+                    <p class="text-white font-headline text-2xl sm:text-3xl font-bold leading-tight mb-2">The Ethereal Sentinel</p>
+                    <p class="text-[#d2e4ff] text-sm leading-relaxed">Experience the next generation of smart city management. Secure, lightning-fast, and built for modern urban infrastructure.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

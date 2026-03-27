@@ -1,16 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="max-w-xl mx-auto mb-12">
+    <div class="mb-8">
+        <a href="{% url 'manage_availability' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mb-4">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Schedule
+        </a>
+        <h2 class="font-headline text-4xl font-black text-white tracking-tight">EDIT SLOT</h2>
+        <p class="text-tertiary mt-2 font-bold">{{ slot.get_day_of_week_display }}: {{ slot.start_time|time:"h:i A" }} – {{ slot.end_time|time:"h:i A" }}</p>
+    </div>
 
-<h2>Edit Availability Slot</h2>
+    <div class="bg-surface-container-low p-8 rounded-2xl border border-surface-container shadow-2xl">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-4">
+                {% for field in form %}
+                <div class="flex flex-col">
+                    <label class="font-bold text-slate-300 mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="[&>input]:w-full [&>input]:bg-surface-container-high [&>input]:text-white [&>input]:border [&>input]:border-surface-variant [&>input]:rounded-xl [&>input]:px-4 [&>input]:py-3 [&>input]:focus:border-primary [&>input]:focus:ring-1 [&>input]:focus:ring-primary [&>input]:transition-all
+                                [&>select]:w-full [&>select]:bg-surface-container-high [&>select]:text-white [&>select]:border [&>select]:border-surface-variant [&>select]:rounded-xl [&>select]:px-4 [&>select]:py-3 [&>select]:focus:border-primary [&>select]:focus:ring-1 [&>select]:focus:ring-primary [&>select]:transition-all
+                                <!-- Checkbox styling -->
+                                [&>input[type=checkbox]]:w-auto [&>input[type=checkbox]]:h-5 [&>input[type=checkbox]]:w-5 [&>input[type=checkbox]]:text-primary [&>input[type=checkbox]]:bg-surface-container-high [&>input[type=checkbox]]:border-surface-variant [&>input[type=checkbox]]:rounded [&>input[type=checkbox]]:p-0">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        <p class="text-xs text-red-500 mt-1 font-bold">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
 
-<p>{{ slot.get_day_of_week_display }}: {{ slot.start_time }} – {{ slot.end_time }}</p>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-    <a href="{% url 'manage_availability' %}">Cancel</a>
-</form>
-
+            <div class="pt-6 border-t border-surface-container mt-8 flex flex-col sm:flex-row gap-4 justify-end">
+                <a href="{% url 'manage_availability' %}" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-4 bg-surface-container-high hover:bg-surface-variant text-white font-bold tracking-wider rounded-xl transition-all border border-surface-container">
+                    Cancel
+                </a>
+                <button type="submit" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-container hover:bg-primary text-white font-black uppercase tracking-widest text-sm rounded-xl transition-all shadow-lg shadow-primary-container/20">
+                    <span class="material-symbols-outlined text-[20px]">save</span>
+                    <span>Update Slot</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
 {% endblock %}

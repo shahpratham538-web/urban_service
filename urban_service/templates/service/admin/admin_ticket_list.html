@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto mb-12">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <span class="text-rose-500 text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Support Command</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">ALL SUPPORT TICKETS</h2>
+        </div>
+        <div>
+            <a href="{% url 'admin_dashboard' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold bg-surface-container px-4 py-2 rounded-full border border-surface-container-high">
+                <span class="material-symbols-outlined text-[16px]">dashboard</span> Back to Control
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                        <th class="p-4 border-b border-surface-container">Ticket Info</th>
+                        <th class="p-4 border-b border-surface-container">Subject</th>
+                        <th class="p-4 border-b border-surface-container">Priority</th>
+                        <th class="p-4 border-b border-surface-container text-center">Status</th>
+                        <th class="p-4 border-b border-surface-container text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    {% for ticket in tickets %}
+                    <tr class="hover:bg-surface-container-high/50 transition-colors">
+                        <td class="p-4">
+                            <div class="flex flex-col">
+                                <span class="text-white font-mono text-sm font-bold">#{{ ticket.id }}</span>
+                                <span class="text-xs text-slate-400 mt-1">User: {{ ticket.raised_by.name }}</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <p class="font-bold text-slate-200 line-clamp-1">{{ ticket.subject }}</p>
+                            <p class="text-xs text-slate-400 mt-1">Assigned: {{ ticket.assigned_to.name|default:"Unassigned" }}</p>
+                        </td>
+                        <td class="p-4">
+                            {% if ticket.priority == 'high' %}
+                                <span class="inline-flex items-center gap-1 text-rose-400 text-xs font-bold uppercase tracking-widest bg-rose-500/10 px-2 py-1 rounded border border-rose-500/20"><span class="material-symbols-outlined text-[14px]">error</span> High</span>
+                            {% elif ticket.priority == 'medium' %}
+                                <span class="inline-flex items-center gap-1 text-amber-400 text-xs font-bold uppercase tracking-widest bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20"><span class="material-symbols-outlined text-[14px]">warning</span> Med</span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1 text-blue-400 text-xs font-bold uppercase tracking-widest bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20"><span class="material-symbols-outlined text-[14px]">info</span> Low</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-center">
+                            {% if ticket.status == 'open' %}
+                                <span class="px-2 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded text-[10px] font-bold uppercase tracking-widest">Open</span>
+                            {% elif ticket.status == 'in_progress' %}
+                                <span class="px-2 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-[10px] font-bold uppercase tracking-widest">In Progress</span>
+                            {% elif ticket.status == 'resolved' %}
+                                <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-bold uppercase tracking-widest">Resolved</span>
+                            {% else %}
+                                <span class="px-2 py-1 bg-surface-container-high text-slate-400 border border-surface-container rounded text-[10px] font-bold uppercase tracking-widest">{{ ticket.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2 text-xs font-bold tracking-widest uppercase">
+                                {% if ticket.status != 'closed' %}
+                                    {% if ticket.status == 'open' %}
+                                        <a href="{% url 'admin_update_ticket_status' ticket.id 'in_progress' %}" class="text-amber-400 hover:text-white px-3 py-1 bg-surface-container rounded border border-surface-variant transition-colors">Start</a>
+                                    {% endif %}
+                                    {% if ticket.status != 'resolved' %}
+                                        <a href="{% url 'admin_update_ticket_status' ticket.id 'resolved' %}" class="text-emerald-400 hover:text-white px-3 py-1 bg-surface-container rounded border border-surface-variant transition-colors">Resolve</a>
+                                    {% endif %}
+                                    <a href="{% url 'admin_update_ticket_status' ticket.id 'closed' %}" class="text-slate-400 hover:text-white px-3 py-1 bg-surface-container rounded border border-surface-variant transition-colors">Close</a>
+                                {% else %}
+                                    <span class="text-slate-500">Closed</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500">
+                            <span class="material-symbols-outlined text-6xl mb-4 text-surface-container-highest">forum</span>
+                            <h3 class="text-xl font-bold text-white mb-2">No Support Tickets</h3>
+                            <p class="text-sm">There are no support tickets in the system.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

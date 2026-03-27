@@ -1,6 +1,124 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+{% extends "base.html" %}
 
-    <button type="submit">Signup</button>
-</form>
+{% block content %}
+<style>
+    /* Premium input styling */
+    .premium-form p {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+    .premium-form label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #dfc0b4; /* on-surface-variant */
+        margin-bottom: 0.35rem;
+    }
+    .premium-form input, .premium-form select {
+        width: 100%;
+        background-color: rgba(0, 32, 62, 0.6); /* surface-container */
+        border: 1px solid rgba(88, 66, 57, 0.5); /* outline-variant */
+        border-radius: 0.75rem;
+        color: #d2e4ff; /* on-surface */
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .premium-form input:focus, .premium-form select:focus {
+        outline: none;
+        border-color: #51d7f4; /* tertiary */
+        box-shadow: 0 0 0 4px rgba(81, 215, 244, 0.15), inset 0 2px 4px rgba(0,0,0,0.2);
+        background-color: rgba(0, 32, 62, 0.9);
+    }
+    .premium-form .helptext {
+        font-size: 0.7rem;
+        color: #a78b80; /* outline */
+        margin-top: 0.25rem;
+        display: block;
+    }
+    .premium-form ul.errorlist {
+        color: #ffb4ab; /* error */
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        padding-left: 0;
+        list-style: none;
+    }
+    /* Ensure signup fields stack beautifully */
+    .premium-form > p { margin-bottom: 1rem; width: 100%; }
+</style>
+
+<main class="relative flex items-center justify-center p-4 sm:p-8 bg-[#000f21] min-h-screen -mt-16 md:-mt-24 overflow-hidden pt-24 pb-12">
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-[#51d7f4]/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#ff7a3d]/15 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="relative z-10 w-full max-w-6xl rounded-[2rem] overflow-hidden flex flex-col md:flex-row bg-[#001c37] border border-white/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] transform transition-all">
+        
+        <!-- Left Side: Imagery/Showcase -->
+        <div class="hidden md:block w-full md:w-[45%] lg:w-1/2 relative bg-[#092b4b]">
+            <img class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQmX420Xb9I_D53_7yD8nFvK-w2345O_wV1_0j6g8oT1Z356r4d-zR7x2zW45WqTQd9Z7yT3lXv4L_0pQ3U6_x2n_L2W8v01T4Y1T_6X1zY9vB4X4_7t_r1X2zZ1Z8U5uQ3pQ4U5e_yO7P7I_yWbW5rZ6dO6e5Q8W1P_qX2yv3xT5E5uQ_1G8e00U3M7G5xV3kQ9nB2rT9K1N3n" alt="Smart City Network" />
+            <!-- Overlay Gradients -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#00142a] via-[#001c37]/90 to-transparent mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-[#51d7f4]/10 mix-blend-overlay"></div>
+            
+            <!-- Showcase Content -->
+            <div class="absolute inset-0 p-12 flex flex-col justify-center items-start">
+                <div class="w-16 h-1 rounded-full bg-tertiary mb-8"></div>
+                <h2 class="text-white font-headline text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] mb-6">Join The<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#51d7f4] to-blue-300">Network.</span></h2>
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4 text-slate-300">
+                        <div class="mt-1 bg-white/10 p-2 rounded-lg backdrop-blur-sm border border-white/5"><span class="material-symbols-outlined text-tertiary text-sm">rocket_launch</span></div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm tracking-wide">Instant Setup</h4>
+                            <p class="text-xs opacity-80 mt-1 leading-relaxed">Get your resident or provider portal running in seconds with powerful smart tools.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 text-slate-300">
+                        <div class="mt-1 bg-white/10 p-2 rounded-lg backdrop-blur-sm border border-white/5"><span class="material-symbols-outlined text-tertiary text-sm">insights</span></div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm tracking-wide">Real-time Analytics</h4>
+                            <p class="text-xs opacity-80 mt-1 leading-relaxed">Monitor city services and status updates dynamically in stunning dashboards.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="w-full md:w-[55%] lg:w-1/2 p-6 sm:p-10 lg:p-14 flex flex-col justify-center relative bg-[#00142a]">
+            <div class="mb-8">
+                <span class="inline-block px-3 py-1 bg-[#51d7f4]/10 text-[#51d7f4] text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm border border-[#51d7f4]/20 mb-4 shadow-sm">
+                    Create Account
+                </span>
+                <h1 class="font-headline font-extrabold text-3xl text-white tracking-tight mb-2">Sign Up</h1>
+                <p class="text-slate-400 text-sm font-body">Fill in the forms below to create your Urban Service account.</p>
+            </div>
+            
+            <form method="post" class="premium-form w-full flex flex-col">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <p class="text-xs text-slate-500 mt-2 mb-6">By creating an account, you agree to our <a href="#" class="text-[#51d7f4] hover:underline">Terms of Service</a> and <a href="#" class="text-[#51d7f4] hover:underline">Privacy Policy</a>.</p>
+
+                <button type="submit" class="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-bold rounded-xl text-[#003640] bg-[#51d7f4] hover:bg-[#7ce4fa] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#00142a] focus:ring-[#51d7f4] overflow-hidden transition-all shadow-[0_0_20px_rgba(81,215,244,0.2)] hover:shadow-[0_0_25px_rgba(81,215,244,0.4)] active:scale-[0.98]">
+                    <div class="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                    <span class="relative flex items-center gap-2">
+                        Create Account <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">person_add</span>
+                    </span>
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center pt-6 border-t border-white/5">
+                <p class="text-sm text-[#dfc0b4]">
+                    Already part of the network? 
+                    <a href="{% url 'login' %}" class="font-bold text-white hover:text-[#51d7f4] transition-colors border-b border-transparent hover:border-[#51d7f4] pb-0.5">Log in here</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="max-w-7xl mx-auto mb-12">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <span class="text-indigo-400 text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Quality Assurance</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">MONITORING HUB</h2>
+        </div>
+        <div>
+            <a href="{% url 'support_dashboard' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold bg-surface-container px-4 py-2 rounded-full border border-surface-container-high">
+                <span class="material-symbols-outlined text-[16px]">dashboard</span> Back to Mission Control
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-surface-container-low border border-surface-container p-6 rounded-2xl shadow-xl hover:border-indigo-500/50 transition-colors group">
+            <span class="material-symbols-outlined text-indigo-400 text-4xl mb-4 group-hover:scale-110 transition-transform">view_list</span>
+            <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-1">Open Tickets</h3>
+            <p class="font-headline font-black text-4xl text-white">{{ ticket_stats.total_open }}</p>
+        </div>
+        <div class="bg-surface-container-low border border-surface-container p-6 rounded-2xl shadow-xl hover:border-amber-500/50 transition-colors group">
+            <span class="material-symbols-outlined text-amber-400 text-4xl mb-4 group-hover:scale-110 transition-transform">hourglass_top</span>
+            <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-1">In Progress</h3>
+            <p class="font-headline font-black text-4xl text-white">{{ ticket_stats.total_in_progress }}</p>
+        </div>
+        <div class="bg-surface-container-low border border-surface-container p-6 rounded-2xl shadow-xl hover:border-rose-500/50 transition-colors group relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-rose-500/20 blur-2xl rounded-full"></div>
+            <span class="material-symbols-outlined text-rose-500 text-4xl mb-4 relative z-10 group-hover:scale-110 transition-transform">emergency</span>
+            <h3 class="text-rose-400 text-sm font-bold uppercase tracking-widest mb-1 relative z-10">High Priority Open</h3>
+            <p class="font-headline font-black text-4xl text-white relative z-10">{{ ticket_stats.high_priority_open }}</p>
+        </div>
+    </div>
+
+    <!-- Provider Performance -->
+    <div class="mb-12">
+        <h3 class="font-headline text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-tertiary">engineering</span> Provider Performance
+        </h3>
+        <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                            <th class="p-4 border-b border-surface-container">Provider</th>
+                            <th class="p-4 border-b border-surface-container">Contact Email</th>
+                            <th class="p-4 border-b border-surface-container text-center">Avg Rating</th>
+                            <th class="p-4 border-b border-surface-container text-center">Total Bookings</th>
+                            <th class="p-4 border-b border-surface-container text-right">Total Reviews</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container">
+                        {% for provider in providers %}
+                        <tr class="transition-colors {% if provider.avg_rating and provider.avg_rating < 3 %}bg-rose-500/5 hover:bg-rose-500/10 border-l-4 border-rose-500{% else %}hover:bg-surface-container-high/50 border-l-4 border-transparent{% endif %}">
+                            <td class="p-4 font-bold text-white">{{ provider.name }}</td>
+                            <td class="p-4 text-slate-400 text-sm">{{ provider.email }}</td>
+                            <td class="p-4 text-center">
+                                {% if provider.avg_rating %}
+                                    <span class="inline-flex items-center gap-1 font-headline font-black text-lg {% if provider.avg_rating < 3 %}text-rose-400{% else %}text-amber-400{% endif %}">
+                                        {{ provider.avg_rating|floatformat:1 }} <span class="material-symbols-outlined text-[18px]">star</span>
+                                    </span>
+                                {% else %}
+                                    <span class="text-xs text-slate-500 font-bold uppercase tracking-widest">No ratings</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 text-center text-slate-300 font-bold">{{ provider.total_bookings }}</td>
+                            <td class="p-4 text-right text-slate-400">{{ provider.total_reviews }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="p-12 text-center text-slate-500">
+                                <span class="material-symbols-outlined text-6xl mb-4 text-surface-container-highest">engineering</span>
+                                <h3 class="text-xl font-bold text-white mb-2">No Providers Found</h3>
+                                <p class="text-sm">There are no service providers active in the system.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Low Rated Reviews -->
+    <div>
+        <h3 class="font-headline text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span class="material-symbols-outlined text-rose-500">warning</span> Critical Reviews (≤ 2 ★)
+        </h3>
+        <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                            <th class="p-4 border-b border-surface-container">Service Details</th>
+                            <th class="p-4 border-b border-surface-container">Participants</th>
+                            <th class="p-4 border-b border-surface-container text-center">Rating</th>
+                            <th class="p-4 border-b border-surface-container">Feedback</th>
+                            <th class="p-4 border-b border-surface-container text-right">Date Reviewed</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-surface-container">
+                        {% for review in low_reviews %}
+                        <tr class="hover:bg-surface-container-high/50 transition-colors">
+                            <td class="p-4">
+                                <span class="font-bold text-white block">{{ review.booking.service.serviceName }}</span>
+                            </td>
+                            <td class="p-4 flex flex-col gap-1">
+                                <span class="text-xs text-slate-400"><span class="font-bold text-slate-300">Provider:</span> {{ review.booking.service.provider.name }}</span>
+                                <span class="text-xs text-slate-400"><span class="font-bold text-slate-300">Resident:</span> {{ review.booking.resident.name }}</span>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center gap-1 font-headline font-black text-rose-400 text-lg">
+                                    {{ review.rating }} <span class="material-symbols-outlined text-[18px]">star</span>
+                                </span>
+                            </td>
+                            <td class="p-4 text-sm text-slate-300 italic max-w-xs">
+                                "{{ review.comment|default:"No comment provided by the resident." }}"
+                            </td>
+                            <td class="p-4 text-right text-slate-400 text-sm">
+                                {{ review.created_at|date:"M d, Y" }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="p-12 text-center text-emerald-500/80">
+                                <span class="material-symbols-outlined text-6xl mb-4 text-emerald-500/20">verified</span>
+                                <h3 class="text-xl font-bold text-emerald-400 mb-2">Quality Standards Met</h3>
+                                <p class="text-sm">There are no low-rated reviews in the system. Great job!</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

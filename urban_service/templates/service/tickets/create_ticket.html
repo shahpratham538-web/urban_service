@@ -1,14 +1,74 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="mb-10 flex flex-col items-center justify-center text-center">
+    <h1 class="font-headline text-4xl font-bold tracking-tight text-white mb-2 uppercase">Report an Issue</h1>
+    <p class="text-slate-400 font-body text-sm tracking-wide">SUBMIT INFRASTRUCTURE AND SAFETY ALERTS TO CENTRAL COMMAND.</p>
+</div>
 
-<h2>Raise a Support Ticket</h2>
+<!-- Form Container -->
+<section class="bg-surface-container-high/40 backdrop-blur-xl border border-white/5 rounded-xl p-8 shadow-2xl max-w-2xl mx-auto">
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="bg-error-container/20 text-error p-4 rounded-lg mb-6 border border-error/50">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Ticket</button>
-    <a href="{% url 'my_tickets' %}">Cancel</a>
-</form>
+        {% for field in form %}
+        <div class="space-y-2">
+            <label for="{{ field.id_for_label }}" class="block font-headline text-[10px] uppercase tracking-[0.2em] text-primary-container font-bold">
+                {{ field.label }}
+            </label>
+            <div class="relative group">
+                {{ field }}
+            </div>
+            {% if field.help_text %}
+            <p class="text-xs text-slate-500 mt-1">{{ field.help_text }}</p>
+            {% endif %}
+            {% if field.errors %}
+            <div class="text-xs text-error mt-1">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <!-- Submit Button -->
+        <div class="pt-6 flex flex-col sm:flex-row gap-4">
+            <button type="submit" class="flex-1 bg-gradient-to-r from-primary-container to-primary text-on-primary-container font-headline font-black py-4 rounded-xl tracking-widest uppercase shadow-[0_10px_30px_rgba(255,122,61,0.3)] active:scale-95 transition-all text-center">
+                Submit Ticket
+            </button>
+            <a href="{% url 'my_tickets' %}" class="flex-1 border border-outline-variant hover:border-primary-container/50 hover:bg-primary-container/5 py-4 rounded-xl flex items-center justify-center transition-all group font-headline font-bold text-slate-300 uppercase tracking-widest text-sm">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>
 
+<!-- Include custom styles to force Django form inputs to look like Stitch -->
+<style>
+    form input[type="text"],
+    form input[type="password"],
+    form input[type="email"],
+    form input[type="number"],
+    form select,
+    form textarea {
+        width: 100%;
+        background-color: rgba(24, 54, 86, 0.3) !important;
+        border: none !important;
+        border-bottom: 2px solid #584239 !important;
+        color: #d2e4ff !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 300ms !important;
+        font-family: 'Manrope', sans-serif !important;
+        outline: none !important;
+    }
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+        border-bottom-color: #ffb598 !important;
+        box-shadow: none !important;
+    }
+</style>
 {% endblock %}

@@ -1,56 +1,108 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="mb-8">
+        <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Resident Hub</span>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">MY BOOKINGS</h2>
+    </div>
 
-<h2>My Bookings</h2>
+    <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-high text-slate-300 text-sm uppercase tracking-wider font-['Space_Grotesk']">
+                        <th class="p-4 font-bold border-b border-surface-container">Service</th>
+                        <th class="p-4 font-bold border-b border-surface-container">Provider</th>
+                        <th class="p-4 font-bold border-b border-surface-container">Status</th>
+                        <th class="p-4 font-bold border-b border-surface-container">Dates</th>
+                        <th class="p-4 font-bold border-b border-surface-container text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    {% for booking in bookings %}
+                    <tr class="hover:bg-surface-container-high/50 transition-colors">
+                        <td class="p-4">
+                            <p class="font-bold text-white text-lg">{{ booking.service.serviceName }}</p>
+                            <p class="text-xs text-slate-400 mt-1">ID: #{{ booking.id }}</p>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400 text-lg">person</span>
+                                <span class="text-slate-300">{{ booking.service.provider.name }}</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            {% if booking.status == 'pending' %}
+                                <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold border border-amber-500/30 uppercase tracking-widest">Pending</span>
+                            {% elif booking.status == 'accepted' %}
+                                <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold border border-blue-500/30 uppercase tracking-widest">Accepted</span>
+                            {% elif booking.status == 'in_progress' %}
+                                <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold border border-purple-500/30 uppercase tracking-widest">In Progress</span>
+                            {% elif booking.status == 'completed' %}
+                                <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 uppercase tracking-widest">Completed</span>
+                            {% elif booking.status == 'cancelled' %}
+                                <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold border border-red-500/30 uppercase tracking-widest">Cancelled</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            <div class="text-sm">
+                                <p class="text-slate-300"><span class="text-slate-500">Booked:</span> {{ booking.booking_date|date:"M d, Y" }}</p>
+                                <p class="text-white font-medium mt-1"><span class="text-tertiary">Sched:</span> {{ booking.scheduled_date|date:"M d, Y H:i"|default:"TBD" }}</p>
+                            </div>
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex flex-col items-end gap-2">
+                                
+                                <!-- Pay Button -->
+                                {% if booking.status == 'completed' and not booking.payment %}
+                                    <a href="{% url 'make_payment' booking.id %}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold tracking-wider rounded-lg transition-colors shadow-lg shadow-emerald-500/20 w-fit">
+                                        <span class="material-symbols-outlined text-[18px]">payments</span> Pay ₹{{ booking.service.servicePrize }}
+                                    </a>
+                                {% endif %}
 
-<table border="1">
+                                {% if booking.payment %}
+                                    <span class="inline-flex items-center gap-1 text-emerald-400 text-xs font-bold">
+                                        <span class="material-symbols-outlined text-[16px]">check_circle</span> Paid
+                                    </span>
+                                {% endif %}
 
-<tr>
-<th>Service</th>
-<th>Provider</th>
-<th>Status</th>
-<th>Booked On</th>
-<th>Scheduled For</th>
-<th>Actions</th>
-</tr>
+                                <!-- Review -->
+                                {% if booking.status == 'completed' and not booking.review %}
+                                    <a href="{% url 'submit_review' booking.id %}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest text-amber-400 text-xs font-bold tracking-wider rounded-lg border border-surface-variant transition-colors w-fit">
+                                        <span class="material-symbols-outlined text-[18px]">star_rate</span> Leave Review
+                                    </a>
+                                {% elif booking.review %}
+                                    <span class="inline-flex items-center gap-1 text-amber-400 text-xs font-bold mt-1">
+                                        <span class="material-symbols-outlined text-[16px]">star</span> {{ booking.review.rating }}
+                                    </span>
+                                {% endif %}
 
-{% for booking in bookings %}
+                                <!-- Message Link - Premium UI -->
+                                <a href="{% url 'booking_conversation' booking.id %}" class="group inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-container/10 hover:bg-primary-container text-primary-container hover:text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 border border-primary-container/30 hover:border-primary-container shadow-[0_0_15px_rgba(255,122,61,0)] hover:shadow-[0_0_15px_rgba(255,122,61,0.4)] w-fit mt-1">
+                                    <span class="material-symbols-outlined text-[18px]">forum</span>
+                                    <span>Message</span>
+                                </a>
 
-<tr>
-<td>{{ booking.service.serviceName }}</td>
-<td>{{ booking.service.provider.name }}</td>
-<td>{{ booking.get_status_display }}</td>
-<td>{{ booking.booking_date }}</td>
-<td>{{ booking.scheduled_date|default:"—" }}</td>
-<td>
-    <!-- Pay button for completed bookings without payment -->
-    {% if booking.status == 'completed' and not booking.payment %}
-        <a href="{% url 'make_payment' booking.id %}" style="color:green; font-weight:bold;">💳 Pay Now</a><br>
-    {% endif %}
-
-    {% if booking.payment %}
-        ✅ Paid (₹{{ booking.payment.amount }})
-    {% endif %}
-
-    <!-- Review link for completed bookings -->
-    {% if booking.status == 'completed' and not booking.review %}
-        <a href="{% url 'submit_review' booking.id %}">⭐ Leave Review</a><br>
-    {% elif booking.review %}
-        ⭐ Reviewed ({{ booking.review.rating }}★)
-    {% endif %}
-
-    <!-- Message link -->
-    <a href="{% url 'booking_conversation' booking.id %}">💬 Messages</a>
-</td>
-</tr>
-
-{% empty %}
-<tr>
-    <td colspan="6">No bookings yet. <a href="{% url 'list_services' %}">Browse services</a></td>
-</tr>
-{% endfor %}
-
-</table>
-
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-400">
+                            <div class="flex flex-col items-center gap-4">
+                                <span class="material-symbols-outlined text-6xl text-surface-container-highest">calendar_month</span>
+                                <p class="text-lg">No bookings yet.</p>
+                                <a href="{% url 'list_services' %}" class="inline-block mt-2 px-6 py-3 bg-primary-container text-white font-bold rounded-lg hover:bg-primary transition-colors hover:shadow-[0_0_20px_rgba(255,122,61,0.4)]">
+                                    Browse Services
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 {% endblock %}

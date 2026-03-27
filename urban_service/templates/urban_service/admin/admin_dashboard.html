@@ -1,20 +1,103 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div>
+            <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">System Pulse</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">ADMIN CONTROL</h2>
+        </div>
+        <div class="flex gap-4">
+            <div class="px-4 py-2 bg-surface-container-high rounded-md border-b-2 border-primary-container">
+                <span class="block text-[10px] text-slate-400 uppercase tracking-widest mb-1">Status</span>
+                <span class="block text-2xl font-headline font-bold text-white leading-none">ONLINE</span>
+            </div>
+        </div>
+    </div>
 
-<h1>Admin Dashboard</h1>
+    <!-- Featured Stats Bento -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="md:col-span-2 bg-surface-container-low p-8 rounded-xl relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="font-headline text-lg font-bold mb-6 text-slate-200">Platform Analytics</h3>
+                <div class="flex items-baseline gap-2">
+                    <span class="text-3xl md:text-4xl font-headline font-black text-white drop-shadow-[0_0_20px_rgba(255,181,152,0.3)]">View Insights</span>
+                </div>
+                <p class="text-slate-400 text-sm mt-4 max-w-xs">Monitor user growth, service usage, and overall platform health.</p>
+                <a href="{% url 'admin_analytics' %}" class="inline-block mt-6 px-6 py-2 bg-primary-container text-on-primary-container font-bold rounded shadow-lg shadow-primary-container/20 active:scale-95 transition-all">Go to Analytics</a>
+            </div>
+            <!-- Abstract glow effect -->
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary-container/10 rounded-full blur-[100px]"></div>
+        </div>
+        <div class="bg-gradient-to-br from-surface-container-high to-surface-container-low p-8 rounded-xl border border-outline-variant/10 flex flex-col justify-between">
+            <div>
+                <span class="material-symbols-outlined text-tertiary text-4xl mb-4">admin_panel_settings</span>
+                <h3 class="font-headline text-lg font-bold text-white mb-2">Django Built-in Admin</h3>
+                <p class="text-slate-400 text-sm mb-6">Access raw database models</p>
+            </div>
+            <a href="/admin/" class="block text-center w-full px-4 py-2 bg-surface-variant backdrop-blur-xl text-white font-bold rounded border border-white/10 active:scale-95 transition-all">Open DB Admin</a>
+        </div>
+    </div>
 
-<p>Welcome {{ request.user.name }}</p>
-
-<h3>Admin Controls</h3>
-
-<ul>
-    <li><a href="{% url 'admin_analytics' %}">Platform Analytics</a></li>
-    <li><a href="{% url 'admin_user_list' %}">Manage Users</a></li>
-    <li><a href="{% url 'admin_service_list' %}">Manage Services</a></li>
-    <li><a href="{% url 'admin_payments' %}">View Payments</a></li>
-    <li><a href="{% url 'support_tickets' %}">View Support Tickets</a></li>
-    <li><a href="/admin/">Django Admin Panel</a></li>
-</ul>
-
+    <!-- Quick Actions List -->
+    <div class="flex items-center justify-between mb-8">
+        <h3 class="font-headline text-2xl font-bold text-white">Administrative Actions</h3>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <a href="{% url 'admin_user_list' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-primary-container">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary-container text-3xl">group</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-primary transition-colors text-lg">Manage Users</h4>
+                <p class="text-slate-400 text-sm mt-1">View, edit, or remove platform users.</p>
+            </div>
+        </a>
+        <a href="{% url 'admin_service_list' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-tertiary">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-tertiary text-3xl">build_circle</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-tertiary transition-colors text-lg">Manage Services</h4>
+                <p class="text-slate-400 text-sm mt-1">Review provider listings and categories.</p>
+            </div>
+        </a>
+        <a href="{% url 'admin_payments' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-emerald-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-emerald-500 text-3xl">payments</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-emerald-400 transition-colors text-lg">View Payments</h4>
+                <p class="text-slate-400 text-sm mt-1">Monitor transactions and revenue.</p>
+            </div>
+        </a>
+        <a href="{% url 'admin_ticket_list' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-rose-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-rose-500 text-3xl">support_agent</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-rose-400 transition-colors text-lg">Support Tickets</h4>
+                <p class="text-slate-400 text-sm mt-1">Resolve issues reported by users.</p>
+            </div>
+        </a>
+        <a href="{% url 'notification_list' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-purple-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-purple-500 text-3xl">notifications</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-purple-400 transition-colors text-lg">Notifications</h4>
+                <p class="text-slate-400 text-sm mt-1">Manage system alerts and messages.</p>
+            </div>
+        </a>
+        <a href="{% url 'admin_settings' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-slate-500">
+            <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-slate-400 text-3xl">settings</span>
+            </div>
+            <div class="flex-1 mt-1">
+                <h4 class="font-bold text-white group-hover:text-slate-300 transition-colors text-lg">Site Settings</h4>
+                <p class="text-slate-400 text-sm mt-1">Configure global application variables.</p>
+            </div>
+        </a>
+    </div>
+</section>
 {% endblock %}

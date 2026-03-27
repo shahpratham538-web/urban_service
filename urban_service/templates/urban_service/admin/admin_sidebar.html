@@ -1,51 +1,44 @@
-<div style="background:#eee; padding:15px;">
+<!-- Admin Sidebar Navigation -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-[#ff7a3d] bg-[#ff7a3d]/10 transition-all duration-300" href="{% url 'admin_dashboard' %}">
+    <span class="material-symbols-outlined">grid_view</span>
+    <span class="font-['Manrope'] font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'admin_analytics' %}">
+    <span class="material-symbols-outlined">analytics</span>
+    <span class="font-['Manrope'] font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'admin_user_list' %}">
+    <span class="material-symbols-outlined">group</span>
+    <span class="font-['Manrope'] font-medium">Manage Users</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'admin_service_list' %}">
+    <span class="material-symbols-outlined">home_repair_service</span>
+    <span class="font-['Manrope'] font-medium">Manage Services</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'admin_payments' %}">
+    <span class="material-symbols-outlined">account_balance</span>
+    <span class="font-['Manrope'] font-medium">Payments</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'admin_ticket_list' %}">
+    <span class="material-symbols-outlined">confirmation_number</span>
+    <span class="font-['Manrope'] font-medium">Support Tickets</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'admin_settings' %}">
+    <span class="material-symbols-outlined">settings</span>
+    <span class="font-['Manrope'] font-medium">Site Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="{% url 'notification_list' %}">
+    <span class="material-symbols-outlined">notifications</span>
+    <span class="font-['Manrope'] font-medium">Notifications</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-400 hover:text-white hover:bg-[#092b4b] transition-all duration-300" href="/admin/">
+    <span class="material-symbols-outlined">admin_panel_settings</span>
+    <span class="font-['Manrope'] font-medium">Django Admin</span>
+</a>
 
-    <h3>Admin Panel</h3>
-
-    <ul>
-
-        <li>
-            <a href="{% url 'admin_dashboard' %}">
-                Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'admin_analytics' %}">
-                Analytics
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'admin_user_list' %}">
-                Manage Users
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'admin_service_list' %}">
-                Manage Services
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'support_tickets' %}">
-                View Tickets
-            </a>
-        </li>
-
-        <li>
-            <a href="/admin/">
-                Django Admin Panel
-            </a>
-        </li>
-
-        <li>
-            <a href="{% url 'logout' %}">
-                Logout
-            </a>
-        </li>
-
-    </ul>
-
+<div class="mt-auto pt-6 border-t border-[#092b4b] mx-4">
+    <a class="flex items-center gap-4 px-4 py-3 rounded-md text-slate-500 hover:text-error hover:bg-error-container/10 transition-all duration-300" href="{% url 'logout' %}">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-['Manrope'] font-medium">Logout</span>
+    </a>
 </div>

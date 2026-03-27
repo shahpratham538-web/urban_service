@@ -239,3 +239,80 @@ class Message(models.Model):
     def __str__(self):
         return f"Message from {self.sender.name} on {self.booking} at {self.created_at}"
 
+
+# ---------------------------------------------------------------------------
+# Notification – in‑app notifications for all users
+# ---------------------------------------------------------------------------
+class Notification(models.Model):
+    TYPE_CHOICES = (
+        ('booking', 'Booking'),
+        ('payment', 'Payment'),
+        ('ticket', 'Ticket'),
+        ('message', 'Message'),
+        ('system', 'System'),
+    )
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="notifications"
+    )
+    message = models.TextField()
+    notification_type = models.CharField(
+        max_length=20, choices=TYPE_CHOICES, default='system'
+    )
+    is_read = models.BooleanField(default=False)
+    link = models.CharField(max_length=255, blank=True, help_text="Optional URL to redirect to")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Notification for {self.user.name} – {self.notification_type}"
+
+
+def create_notification(user, message, notification_type='system', link=''):
+    """Helper to create a notification for a user."""
+    Notification.objects.create(
+        user=user,
+        message=message,
+        notification_type=notification_type,
+        link=link,
+    )
+
+
+# ---------------------------------------------------------------------------
+# SiteSettings – singleton platform configuration
+# ---------------------------------------------------------------------------
+class SiteSettings(models.Model):
+    GATEWAY_CHOICES = (
+        ('simulated', 'Simulated (Testing)'),
+        ('razorpay', 'Razorpay'),
+        ('stripe', 'Stripe'),
+    )
+
+    site_name = models.CharField(max_length=200, default='Urban Service Platform')
+    support_email = models.EmailField(default='support@urbanservice.com')
+    payment_gateway = models.CharField(
+        max_length=20, choices=GATEWAY_CHOICES, default='simulated'
+    )
+    enable_notifications = models.BooleanField(default=True)
+    maintenance_mode = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Site Settings"
+        verbose_name_plural = "Site Settings"
+
+    def __str__(self):
+        return self.site_name
+
+    def save(self, *args, **kwargs):
+        """Ensure only one instance exists (singleton)."""
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+

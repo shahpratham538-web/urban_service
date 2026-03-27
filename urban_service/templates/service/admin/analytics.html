@@ -1,19 +1,99 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="max-w-6xl mx-auto mb-12">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Platform Performance</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">ANALYTICS & INSIGHTS</h2>
+        </div>
+        <div>
+            <a href="{% url 'admin_dashboard' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold bg-surface-container px-4 py-2 rounded-full border border-surface-container-high">
+                <span class="material-symbols-outlined text-[16px]">dashboard</span> Back to Control
+            </a>
+        </div>
+    </div>
 
-<h2>Platform Analytics</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Revenue Card -->
+        <div class="lg:col-span-2 bg-gradient-to-br from-primary-container to-[#584239] rounded-2xl p-8 border border-primary/20 shadow-2xl relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="font-headline text-sm font-bold text-white uppercase tracking-widest mb-1">Total Platform Revenue</h3>
+                <div class="flex items-baseline gap-2 mt-2">
+                    <span class="text-4xl md:text-5xl font-black text-white drop-shadow-md">₹{{ total_revenue }}</span>
+                </div>
+            </div>
+            <div class="absolute -right-10 -bottom-10 opacity-20">
+                <span class="material-symbols-outlined text-[150px] text-white">monitoring</span>
+            </div>
+        </div>
+        
+        <!-- Total Users Card -->
+        <div class="bg-surface-container-low rounded-2xl p-6 border border-surface-container hover:border-surface-variant transition-colors flex flex-col justify-between">
+            <div>
+                <span class="material-symbols-outlined text-slate-400 mb-2">groups</span>
+                <h3 class="font-bold text-slate-400 text-sm uppercase tracking-widest">Total Users</h3>
+            </div>
+            <span class="text-4xl font-black text-white mt-4">{{ total_users }}</span>
+        </div>
 
-<table border="1">
-    <tr><td><strong>Total Users</strong></td><td>{{ total_users }}</td></tr>
-    <tr><td><strong>Providers</strong></td><td>{{ total_providers }}</td></tr>
-    <tr><td><strong>Residents</strong></td><td>{{ total_residents }}</td></tr>
-    <tr><td><strong>Total Services</strong></td><td>{{ total_services }}</td></tr>
-    <tr><td><strong>Total Bookings</strong></td><td>{{ total_bookings }}</td></tr>
-    <tr><td><strong>Completed Bookings</strong></td><td>{{ completed_bookings }}</td></tr>
-    <tr><td><strong>Pending Bookings</strong></td><td>{{ pending_bookings }}</td></tr>
-    <tr><td><strong>Total Revenue</strong></td><td>₹{{ total_revenue }}</td></tr>
-    <tr><td><strong>Open Tickets</strong></td><td>{{ open_tickets }}</td></tr>
-</table>
+        <!-- Total Services Card -->
+        <div class="bg-surface-container-low rounded-2xl p-6 border border-surface-container hover:border-surface-variant transition-colors flex flex-col justify-between">
+            <div>
+                <span class="material-symbols-outlined text-tertiary mb-2">home_repair_service</span>
+                <h3 class="font-bold text-slate-400 text-sm uppercase tracking-widest">Total Services</h3>
+            </div>
+            <span class="text-4xl font-black text-tertiary mt-4">{{ total_services }}</span>
+        </div>
+    </div>
 
+    <!-- User Demographics & Bookings Data -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-surface-container">
+            <h3 class="font-headline text-xl font-bold text-white mb-6 border-b border-surface-container pb-4">User Demographics</h3>
+            <div class="space-y-6">
+                <div class="flex justify-between items-center group">
+                    <div class="flex items-center gap-3 text-slate-300 group-hover:text-primary transition-colors">
+                        <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <span class="font-bold">Residents</span>
+                    </div>
+                    <span class="text-2xl font-black text-white">{{ total_residents }}</span>
+                </div>
+                <div class="flex justify-between items-center group">
+                    <div class="flex items-center gap-3 text-slate-300 group-hover:text-tertiary transition-colors">
+                        <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+                            <span class="material-symbols-outlined">engineering</span>
+                        </div>
+                        <span class="font-bold">Providers</span>
+                    </div>
+                    <span class="text-2xl font-black text-white">{{ total_providers }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-surface-container">
+            <h3 class="font-headline text-xl font-bold text-white mb-6 border-b border-surface-container pb-4">Booking & Support Metrics</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-surface-container-high p-4 rounded-xl border border-surface-container">
+                    <span class="text-slate-400 text-xs font-bold uppercase tracking-widest block mb-1">Total Activity</span>
+                    <span class="text-2xl font-black text-white">{{ total_bookings }} <span class="text-sm font-normal text-slate-500 line-through">bookings</span></span>
+                </div>
+                <div class="bg-surface-container-high p-4 rounded-xl border border-surface-container border-l-4 border-l-emerald-500">
+                    <span class="text-slate-400 text-xs font-bold uppercase tracking-widest block mb-1">Completed</span>
+                    <span class="text-2xl font-black text-emerald-400">{{ completed_bookings }}</span>
+                </div>
+                <div class="bg-surface-container-high p-4 rounded-xl border border-surface-container border-l-4 border-l-amber-500">
+                    <span class="text-slate-400 text-xs font-bold uppercase tracking-widest block mb-1">Pending</span>
+                    <span class="text-2xl font-black text-amber-400">{{ pending_bookings }}</span>
+                </div>
+                <div class="bg-surface-container-high p-4 rounded-xl border border-surface-container border-l-4 border-l-rose-500">
+                    <span class="text-slate-400 text-xs font-bold uppercase tracking-widest block mb-1">Open Tickets</span>
+                    <span class="text-2xl font-black text-rose-400">{{ open_tickets }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

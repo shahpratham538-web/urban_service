@@ -1,5 +1,5 @@
 from django import forms
-from .models import Service, Review, Booking, Ticket, ProviderAvailability, Message
+from .models import Service, Review, Booking, Ticket, ProviderAvailability, Message, SiteSettings
 
 
 class ServiceCreationForm(forms.ModelForm):
@@ -72,3 +72,12 @@ class MessageForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Type your message...'}),
         }
+
+
+class SiteSettingsForm(forms.ModelForm):
+    """Admin edits platform settings."""
+
+    class Meta:
+        model = SiteSettings
+        fields = ['site_name', 'support_email', 'payment_gateway',
+                  'enable_notifications', 'maintenance_mode']

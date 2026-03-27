@@ -1,37 +1,84 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="max-w-7xl mx-auto mb-12">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Service Directory</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">MANAGE SERVICES</h2>
+        </div>
+        <div>
+            <a href="{% url 'admin_dashboard' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold bg-surface-container px-4 py-2 rounded-full border border-surface-container-high">
+                <span class="material-symbols-outlined text-[16px]">dashboard</span> Back to Control
+            </a>
+        </div>
+    </div>
 
-<h2>Service Management</h2>
-
-<table border="1">
-<tr>
-    <th>Service</th>
-    <th>Provider</th>
-    <th>Category</th>
-    <th>Price</th>
-    <th>Active</th>
-    <th>Action</th>
-</tr>
-{% for service in services %}
-<tr>
-    <td>{{ service.serviceName }}</td>
-    <td>{{ service.provider.name }}</td>
-    <td>{{ service.category|default:"—" }}</td>
-    <td>₹{{ service.servicePrize }}</td>
-    <td>{{ service.is_active|yesno:"Yes,No" }}</td>
-    <td>
-        <form method="post" action="{% url 'admin_toggle_service' service.id %}" style="display:inline;">
-            {% csrf_token %}
-            {% if service.is_active %}
-                <button type="submit">Deactivate</button>
-            {% else %}
-                <button type="submit">Activate</button>
-            {% endif %}
-        </form>
-    </td>
-</tr>
-{% endfor %}
-</table>
-
+    <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                        <th class="p-4 border-b border-surface-container">Service Details</th>
+                        <th class="p-4 border-b border-surface-container">Provider</th>
+                        <th class="p-4 border-b border-surface-container">Pricing</th>
+                        <th class="p-4 border-b border-surface-container text-center">Status</th>
+                        <th class="p-4 border-b border-surface-container text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    {% for service in services %}
+                    <tr class="hover:bg-surface-container-high/50 transition-colors">
+                        <td class="p-4">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-white text-lg">{{ service.serviceName }}</span>
+                                <span class="text-xs text-tertiary font-bold uppercase tracking-wider mt-1">{{ service.category|default:"Uncategorized" }}</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="text-slate-300">{{ service.provider.name }}</span>
+                        </td>
+                        <td class="p-4">
+                            <span class="font-headline font-black text-emerald-400 text-lg">₹{{ service.servicePrize }}</span>
+                        </td>
+                        <td class="p-4 text-center">
+                            {% if service.is_active %}
+                                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active
+                                </span>
+                            {% else %}
+                                <span class="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded-full text-xs font-bold uppercase tracking-widest inline-flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-red-500"></span> Inactive
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right">
+                            <form method="post" action="{% url 'admin_toggle_service' service.id %}" class="inline-block">
+                                {% csrf_token %}
+                                {% if service.is_active %}
+                                    <button type="submit" class="px-4 py-2 bg-surface-container text-rose-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border border-surface-variant rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
+                                        Deactivate
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="px-4 py-2 bg-emerald-500/20 text-emerald-400 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 border border-emerald-500/30 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
+                                        Activate
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500">
+                            <span class="material-symbols-outlined text-6xl mb-4 text-surface-container-highest">home_repair_service</span>
+                            <h3 class="text-xl font-bold text-white mb-2">No Services Found</h3>
+                            <p class="text-sm">Providers have not created any services yet.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 {% endblock %}

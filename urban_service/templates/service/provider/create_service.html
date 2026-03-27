@@ -1,14 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<section class="max-w-3xl mx-auto mb-12">
+    <div class="mb-8">
+        <a href="{% url 'provider_services' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold mb-4">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Services
+        </a>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">CREATE SERVICE</h2>
+        <p class="text-slate-400 mt-2">Fill in the details below to list a new service for residents.</p>
+    </div>
 
-<h2>Create Service</h2>
+    <div class="bg-surface-container-low p-8 rounded-2xl border border-surface-container shadow-2xl">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-4">
+                {% for field in form %}
+                <div class="flex flex-col">
+                    <label class="font-bold text-slate-300 mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="[&>input]:w-full [&>input]:bg-surface-container-high [&>input]:text-white [&>input]:border [&>input]:border-surface-variant [&>input]:rounded-xl [&>input]:px-4 [&>input]:py-3 [&>input]:focus:border-primary [&>input]:focus:ring-1 [&>input]:focus:ring-primary [&>input]:transition-all
+                                [&>select]:w-full [&>select]:bg-surface-container-high [&>select]:text-white [&>select]:border [&>select]:border-surface-variant [&>select]:rounded-xl [&>select]:px-4 [&>select]:py-3 [&>select]:focus:border-primary [&>select]:focus:ring-1 [&>select]:focus:ring-primary [&>select]:transition-all
+                                [&>textarea]:w-full [&>textarea]:bg-surface-container-high [&>textarea]:text-white [&>textarea]:border [&>textarea]:border-surface-variant [&>textarea]:rounded-xl [&>textarea]:px-4 [&>textarea]:py-3 [&>textarea]:focus:border-primary [&>textarea]:focus:ring-1 [&>textarea]:focus:ring-primary [&>textarea]:transition-all">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                        <p class="text-xs text-slate-500 mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="text-xs text-red-500 mt-1 font-bold">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-
-    <button type="submit">Create Service</button>
-</form>
-
+            <div class="pt-6 border-t border-surface-container mt-8 flex justify-end">
+                <button type="submit" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-tertiary hover:bg-[#3fb8d3] text-on-tertiary font-black uppercase tracking-widest text-sm rounded-xl transition-all shadow-lg shadow-tertiary/20">
+                    <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                    <span>Submit Listing</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
 {% endblock %}

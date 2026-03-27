@@ -1,37 +1,107 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h2>Conversation – {{ booking.service.serviceName }}</h2>
-
-<p>
-    <strong>Resident:</strong> {{ booking.resident.name }} &nbsp; | &nbsp;
-    <strong>Provider:</strong> {{ booking.service.provider.name }} &nbsp; | &nbsp;
-    <strong>Status:</strong> {{ booking.get_status_display }}
-</p>
-
-<hr>
-
-<div style="border:1px solid #ccc; padding:15px; max-height:400px; overflow-y:auto; margin-bottom:20px;">
-    {% for msg in messages_list %}
-    <div style="margin-bottom:10px; padding:8px; background:{% if msg.sender == request.user %}#e8f5e9{% else %}#f5f5f5{% endif %}; border-radius:5px;">
-        <strong>{{ msg.sender.name }}</strong>
-        <small style="color:#888;">({{ msg.created_at }})</small>
-        <p style="margin:5px 0 0 0;">{{ msg.content }}</p>
+<section class="mb-12 h-[calc(100vh-12rem)] flex flex-col">
+    <!-- Header -->
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-3 mb-2">
+                <a href="{% if request.user.role == 'resident' %}{% url 'resident_bookings' %}{% else %}{% url 'provider_bookings' %}{% endif %}" class="flex items-center gap-1 text-slate-400 hover:text-white transition-colors text-sm font-bold bg-surface-container px-3 py-1 rounded-full border border-surface-container-high">
+                    <span class="material-symbols-outlined text-[16px]">arrow_back</span> Back
+                </a>
+                <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase">Conversation</span>
+            </div>
+            <h2 class="font-headline text-3xl font-black text-white tracking-tight">{{ booking.service.serviceName }}</h2>
+            <div class="flex items-center gap-4 mt-2 text-sm text-slate-400">
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] text-primary">person</span>
+                    <span>Resident: <strong class="text-slate-300">{{ booking.resident.name }}</strong></span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] text-tertiary">handyman</span>
+                    <span>Provider: <strong class="text-slate-300">{{ booking.service.provider.name }}</strong></span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px] {% if booking.status == 'completed' %}text-emerald-400{% elif booking.status == 'cancelled' %}text-red-400{% else %}text-amber-400{% endif %}">info</span>
+                    <span class="font-bold uppercase tracking-wider {% if booking.status == 'completed' %}text-emerald-400{% elif booking.status == 'cancelled' %}text-red-400{% else %}text-amber-400{% endif %}">{{ booking.get_status_display }}</span>
+                </div>
+            </div>
+        </div>
     </div>
-    {% empty %}
-    <p style="color:#999;">No messages yet. Start the conversation below!</p>
-    {% endfor %}
-</div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send Message</button>
-</form>
+    <!-- Chat Area -->
+    <div class="flex-1 bg-surface-container-low rounded-2xl border border-surface-container flex flex-col overflow-hidden shadow-2xl">
+        <!-- Messages -->
+        <div class="flex-1 overflow-y-auto w-full p-6 space-y-6" id="chat-container">
+            {% for msg in messages_list %}
+                {% if msg.sender == request.user %}
+                <!-- Current User Message (Right) -->
+                <div class="flex flex-col items-end">
+                    <div class="flex items-end gap-2 mb-1">
+                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{{ msg.created_at|date:"M d, Y h:i A" }}</span>
+                        <span class="text-xs text-primary font-bold">You</span>
+                    </div>
+                    <div class="bg-primary-container text-white px-5 py-3 rounded-2xl rounded-tr-sm max-w-[80%] md:max-w-[60%] shadow-lg shadow-primary-container/20 border border-primary-container/50">
+                        <p class="whitespace-pre-wrap">{{ msg.content }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <!-- Other User Message (Left) -->
+                <div class="flex flex-col items-start">
+                    <div class="flex items-end gap-2 mb-1">
+                        <span class="text-xs text-tertiary font-bold">{{ msg.sender.name }}</span>
+                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">{{ msg.created_at|date:"M d, Y h:i A" }}</span>
+                    </div>
+                    <div class="bg-surface-container-high text-slate-200 px-5 py-3 rounded-2xl rounded-tl-sm max-w-[80%] md:max-w-[60%] shadow-lg border border-surface-container-highest">
+                        <p class="whitespace-pre-wrap">{{ msg.content }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            {% empty %}
+                <div class="h-full w-full flex flex-col items-center justify-center text-slate-500">
+                    <span class="material-symbols-outlined text-6xl text-surface-container-highest mb-4">forum</span>
+                    <h3 class="text-xl font-bold text-slate-400">No Messages Yet</h3>
+                    <p class="text-sm mt-2">Start the conversation by sending a message below.</p>
+                </div>
+            {% endfor %}
+        </div>
 
-<p style="margin-top:15px;">
-    <a href="{% url 'resident_bookings' %}">← Back to Bookings</a>
-</p>
+        <!-- Input Area -->
+        <div class="bg-surface-container border-t border-surface-container-high p-4">
+            <form method="post" class="flex items-end gap-4" id="message-form">
+                {% csrf_token %}
+                <div class="flex-1 bg-surface-container-low rounded-xl border border-surface-container-high focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all overflow-hidden">
+                    <textarea name="content" rows="2" class="w-full bg-transparent text-white border-0 focus:ring-0 p-4 resize-none placeholder-slate-500 outline-none h-auto min-h-[60px] max-h-[150px]" placeholder="Type your message here..." required></textarea>
+                </div>
+                <!-- We hide the rest of the generated form fields to prevent duplicates if {{ form }} had hidden fields, but usually we just need csrf and content. -->
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                <button type="submit" class="shrink-0 h-[60px] px-6 bg-primary-container hover:bg-primary text-white font-bold rounded-xl transition-all shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2">
+                    <span class="hidden sm:inline">Send</span>
+                    <span class="material-symbols-outlined text-[20px]">send</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
 
+<!-- Auto-scroll to bottom of chat -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Handle textarea auto-resize
+        const textarea = document.querySelector('textarea[name="content"]');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    });
+</script>
 {% endblock %}

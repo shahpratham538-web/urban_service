@@ -8,6 +8,8 @@ from .models import (
     Payment,
     Ticket,
     Message,
+    Notification,
+    SiteSettings,
 )
 
 
@@ -83,3 +85,22 @@ class TicketAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     list_display = ("booking", "sender", "created_at")
     list_filter = ("created_at",)
+
+
+# ---------------------------------------------------------------------------
+# Notification
+# ---------------------------------------------------------------------------
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ("user", "notification_type", "is_read", "created_at")
+    list_filter = ("notification_type", "is_read")
+    search_fields = ("user__name", "message")
+
+
+# ---------------------------------------------------------------------------
+# SiteSettings
+# ---------------------------------------------------------------------------
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ("site_name", "support_email", "payment_gateway", "enable_notifications", "maintenance_mode")
+

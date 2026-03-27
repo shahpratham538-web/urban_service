@@ -1,36 +1,75 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="max-w-7xl mx-auto mb-12">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+            <span class="text-emerald-500 text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Financial Overseer</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">ALL PAYMENTS</h2>
+        </div>
+        <div>
+            <div class="px-6 py-3 bg-surface-container-low rounded-xl border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)] inline-flex items-center gap-4">
+                <span class="text-xs text-slate-400 font-bold uppercase tracking-widest block">Total Platform Revenue</span>
+                <span class="text-2xl font-headline font-black text-emerald-400">₹{{ total_revenue }}</span>
+            </div>
+        </div>
+    </div>
 
-<h2>All Payments</h2>
-
-<p><strong>Total Revenue (completed):</strong> ₹{{ total_revenue }}</p>
-
-<table border="1">
-<tr>
-    <th>Transaction ID</th>
-    <th>Resident</th>
-    <th>Service</th>
-    <th>Provider</th>
-    <th>Amount</th>
-    <th>Status</th>
-    <th>Paid At</th>
-</tr>
-{% for payment in payments %}
-<tr>
-    <td>{{ payment.transaction_id }}</td>
-    <td>{{ payment.booking.resident.name }}</td>
-    <td>{{ payment.booking.service.serviceName }}</td>
-    <td>{{ payment.booking.service.provider.name }}</td>
-    <td>₹{{ payment.amount }}</td>
-    <td>{{ payment.status }}</td>
-    <td>{{ payment.paid_at|default:"—" }}</td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="7">No payments recorded yet.</td>
-</tr>
-{% endfor %}
-</table>
-
+    <div class="bg-surface-container-low rounded-xl border border-surface-container overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                    <tr class="bg-surface-container-high text-slate-300 text-xs uppercase tracking-wider font-bold">
+                        <th class="p-4 border-b border-surface-container">Transaction ID</th>
+                        <th class="p-4 border-b border-surface-container">Details</th>
+                        <th class="p-4 border-b border-surface-container text-right">Amount</th>
+                        <th class="p-4 border-b border-surface-container">Status</th>
+                        <th class="p-4 border-b border-surface-container text-right">Paid At</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container">
+                    {% for payment in payments %}
+                    <tr class="hover:bg-surface-container-high/50 transition-colors">
+                        <td class="p-4">
+                            <span class="text-slate-400 font-mono text-xs">{{ payment.transaction_id }}</span>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-white">{{ payment.booking.service.serviceName }}</span>
+                                <span class="text-xs text-slate-400 mt-1">Provider: <span class="text-tertiary">{{ payment.booking.service.provider.name }}</span></span>
+                                <span class="text-xs text-slate-400">Resident: <span class="text-primary">{{ payment.booking.resident.name }}</span></span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-right">
+                            <span class="font-headline font-black text-emerald-400 text-lg">₹{{ payment.amount }}</span>
+                        </td>
+                        <td class="p-4">
+                            {% if payment.status == 'completed' %}
+                                <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">Completed</span>
+                            {% elif payment.status == 'pending' %}
+                                <span class="px-2 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">Pending</span>
+                            {% elif payment.status == 'failed' %}
+                                <span class="px-2 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded-md text-[10px] font-bold uppercase tracking-widest">Failed</span>
+                            {% else %}
+                                <span class="px-2 py-1 bg-surface-container text-slate-400 border border-surface-variant rounded-md text-[10px] font-bold uppercase tracking-widest">{{ payment.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right">
+                            <span class="text-slate-400 text-sm whitespace-nowrap">{{ payment.paid_at|default:"—" }}</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500">
+                            <span class="material-symbols-outlined text-6xl mb-4 text-surface-container-highest">receipt_long</span>
+                            <h3 class="text-xl font-bold text-white mb-2">No Transactions</h3>
+                            <p class="text-sm">There are no payment records in the system yet.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 {% endblock %}
