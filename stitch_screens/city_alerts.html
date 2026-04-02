@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ethereal Sentinel | Alerts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#003d49",
+              "on-tertiary": "#003640",
+              "secondary-fixed": "#ffdbcd",
+              "on-primary-container": "#652200",
+              "primary": "#ffb598",
+              "primary-fixed-dim": "#ffb598",
+              "surface-container-lowest": "#000f21",
+              "surface-container-high": "#092b4b",
+              "primary-fixed": "#ffdbcd",
+              "secondary-fixed-dim": "#ffb598",
+              "on-secondary-fixed-variant": "#6e3820",
+              "error-container": "#93000a",
+              "tertiary": "#51d7f4",
+              "on-primary": "#591d00",
+              "on-tertiary-fixed-variant": "#004e5c",
+              "surface-container-low": "#001c37",
+              "surface-container": "#00203e",
+              "tertiary-fixed": "#aaedff",
+              "on-tertiary-fixed": "#001f26",
+              "secondary-container": "#713a22",
+              "on-surface-variant": "#dfc0b4",
+              "on-secondary-fixed": "#360f00",
+              "on-error": "#690005",
+              "tertiary-fixed-dim": "#51d7f4",
+              "on-background": "#d2e4ff",
+              "inverse-on-surface": "#123252",
+              "outline-variant": "#584239",
+              "inverse-primary": "#a53c00",
+              "surface-container-highest": "#183656",
+              "surface": "#00142a",
+              "inverse-surface": "#d2e4ff",
+              "primary-container": "#ff7a3d",
+              "surface-bright": "#1d3b5b",
+              "background": "#00142a",
+              "on-secondary-container": "#f3a687",
+              "tertiary-container": "#00b0cc",
+              "surface-dim": "#00142a",
+              "on-primary-fixed-variant": "#7e2c00",
+              "outline": "#a78b80",
+              "on-surface": "#d2e4ff",
+              "error": "#ffb4ab",
+              "surface-variant": "#183656",
+              "surface-tint": "#ffb598",
+              "on-secondary": "#52220c",
+              "on-error-container": "#ffdad6",
+              "on-primary-fixed": "#360f00",
+              "secondary": "#ffb598"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-panel {
+        backdrop-filter: blur(16px);
+        background: rgba(9, 43, 75, 0.4);
+      }
+      .tonal-shift {
+        background: #001c37;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container/30">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#00142a]/80 backdrop-blur-xl border-b border-[#092b4b]/30 shadow-[0_20px_40px_rgba(0,0,0,0.4)] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#ff7a3d]" data-icon="bubble_chart">bubble_chart</span>
+<h1 class="text-xl font-black tracking-widest text-white uppercase font-['Space_Grotesk']">ETHÉREAL SENTINEL</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 mr-6">
+<a class="text-slate-400 hover:text-[#ff7a3d] transition-colors font-['Manrope'] font-semibold uppercase tracking-widest text-xs" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-[#ff7a3d] transition-colors font-['Manrope'] font-semibold uppercase tracking-widest text-xs" href="#">Report</a>
+<a class="text-[#ffb598] font-['Manrope'] font-semibold uppercase tracking-widest text-xs" href="#">Alerts</a>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 overflow-hidden active:scale-95 duration-200">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a male professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvr3ahXyboBzqqik7K_hRxT-MtjutyxUBZTszOgsv7Fqg4AefkFtSyi7HGv34I405Ipvg5SIqWOlhUx9c48JGBFnKtUo-9bAaGOnNVsVxFXC8qVFX1TUv-CXyb6VtMcfbzkczjfPJgpWjIIbyQJg6-ZmCiCD6QqnOxIYr-1AVE_9ujlrtkzEGCMDEgWye8z5yDd6cZLA2ffecwR7pvtXrZmgh2GC9MrM6t-B2je0hvVOYSKIQZioNCT0N4Q56q6de1c9sCii6Cgw"/>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-4xl mx-auto min-h-screen">
+<!-- Page Header -->
+<div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<span class="text-primary font-headline font-bold tracking-widest uppercase text-xs">Live Feed</span>
+<h2 class="text-4xl md:text-5xl font-headline font-bold text-white tracking-tight mt-2">Active Notifications</h2>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded-sm bg-surface-container-high text-tertiary text-[10px] font-bold uppercase tracking-tighter border border-tertiary/20">System Online</span>
+<span class="px-3 py-1 rounded-sm bg-surface-container-high text-primary text-[10px] font-bold uppercase tracking-tighter border border-primary/20">3 Critical</span>
+</div>
+</div>
+<!-- Alerts Vertical Feed -->
+<div class="space-y-4">
+<!-- Alert Card: Emergency -->
+<div class="glass-panel p-6 rounded-xl border border-error/10 hover:border-error/30 transition-all group">
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 shrink-0 flex items-center justify-center rounded-lg bg-error-container/20 text-error">
+<span class="material-symbols-outlined" data-icon="emergency_home" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-bold text-white tracking-wide">Emergency: Gas Leak Detected</h3>
+<span class="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mt-1">2 MIN AGO</span>
+</div>
+<p class="text-on-surface-variant font-body text-sm leading-relaxed mb-4">Immediate evacuation ordered for Sector 4, District B. Fire services are on site. Avoid the perimeter until further notice.</p>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-primary-container text-on-primary-container rounded-md font-bold text-xs uppercase tracking-widest active:scale-95 transition-transform">Safety Protocol</button>
+<button class="px-4 py-2 bg-surface-variant/40 text-white rounded-md font-bold text-xs uppercase tracking-widest backdrop-blur-md">Mute District</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Alert Card: Road Closure -->
+<div class="glass-panel p-6 rounded-xl border border-primary/5 hover:border-primary/20 transition-all group">
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 shrink-0 flex items-center justify-center rounded-lg bg-primary-container/10 text-primary-container">
+<span class="material-symbols-outlined" data-icon="traffic" style="font-variation-settings: 'FILL' 1;">traffic</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-bold text-white tracking-wide">Road Closure: Avenir Bridge</h3>
+<span class="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mt-1">14 MIN AGO</span>
+</div>
+<p class="text-on-surface-variant font-body text-sm leading-relaxed">Structural assessment in progress. Traffic diverted to the Lower Tunnel. Expected reopening: 06:00 AM Tomorrow.</p>
+</div>
+</div>
+</div>
+<!-- Alert Card: Maintenance -->
+<div class="glass-panel p-6 rounded-xl border border-tertiary/5 hover:border-tertiary/20 transition-all group">
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 shrink-0 flex items-center justify-center rounded-lg bg-tertiary-container/10 text-tertiary-container">
+<span class="material-symbols-outlined" data-icon="water_drop" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-bold text-white tracking-wide">Water Maintenance</h3>
+<span class="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mt-1">1 HR AGO</span>
+</div>
+<p class="text-on-surface-variant font-body text-sm leading-relaxed">Scheduled filtration updates for the North Reservoir. Water pressure may be lower than average in residential blocks 12-18.</p>
+</div>
+</div>
+</div>
+<!-- Alert Card: Infrastructure -->
+<div class="glass-panel p-6 rounded-xl border border-primary/5 hover:border-primary/20 transition-all group">
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 shrink-0 flex items-center justify-center rounded-lg bg-surface-container-highest text-primary">
+<span class="material-symbols-outlined" data-icon="electric_bolt" style="font-variation-settings: 'FILL' 1;">electric_bolt</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-bold text-white tracking-wide">Grid Optimization Complete</h3>
+<span class="text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mt-1">3 HRS AGO</span>
+</div>
+<p class="text-on-surface-variant font-body text-sm leading-relaxed">District 9 energy grid has been successfully synced with the Sentinel Core. Efficiency increased by 14.2%.</p>
+</div>
+</div>
+</div>
+<!-- Alert Card: Public Safety (Old) -->
+<div class="glass-panel p-6 rounded-xl border border-white/5 opacity-60 hover:opacity-100 transition-all group">
+<div class="flex items-start gap-6">
+<div class="w-12 h-12 shrink-0 flex items-center justify-center rounded-lg bg-surface-container-high text-slate-400">
+<span class="material-symbols-outlined" data-icon="security" style="font-variation-settings: 'FILL' 0;">security</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-headline font-bold text-slate-300 tracking-wide">Routine Patrol Log</h3>
+<span class="text-[10px] font-label font-bold text-slate-600 uppercase tracking-widest mt-1">6 HRS AGO</span>
+</div>
+<p class="text-slate-500 font-body text-sm leading-relaxed">Automated safety sweep of Central Park completed. No anomalies detected. System health: 100%.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination/Load More (Editorial Style) -->
+<div class="mt-12 flex justify-center">
+<button class="group flex flex-col items-center gap-2">
+<span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/60 group-hover:text-primary transition-colors">Archive Access</span>
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-4 pb-safe bg-[#001c37]/90 backdrop-blur-2xl rounded-t-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-50">
+<a class="flex flex-col items-center justify-center text-slate-500 hover:bg-white/5 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="grid_view">grid_view</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-semibold mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 hover:bg-white/5 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="campaign">campaign</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-semibold mt-1">Report</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ff7a3d] bg-[#ff7a3d]/10 rounded-xl px-4 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="notifications_active" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-widest font-semibold mt-1">Alerts</span>
+</a>
+</nav>
+<!-- Side Decoration (Smart City HUD feel) -->
+<div class="hidden lg:block fixed left-6 top-1/2 -translate-y-1/2 space-y-8 opacity-20 pointer-events-none">
+<div class="rotate-90 origin-left text-[10px] font-black uppercase tracking-[0.5em] text-white whitespace-nowrap">NETWORK_STATUS_OK</div>
+<div class="w-[1px] h-32 bg-gradient-to-b from-transparent via-primary to-transparent mx-auto"></div>
+<div class="rotate-90 origin-left text-[10px] font-black uppercase tracking-[0.5em] text-white whitespace-nowrap">LAT_40.7128_LONG_74.0060</div>
+</div>
+</body></html>

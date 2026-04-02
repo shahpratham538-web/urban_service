@@ -117,7 +117,7 @@ Follow these exact steps in the Render Dashboard to deploy your site:
 
    Variable 1:
    - Key: DATABASE_URL
-   - Value: postgresql://prod_urbanservice_db_user:VHngVrNAG4FOooYtOZeVwGSJ6QZwkF0c@dpg-d73424c2kvos7387jt1g-a.singapore-postgres.render.com/prod_urbanservice_db
+   - Value: (Copy the Internal Database URL from your Render PostgreSQL dashboard — do NOT paste it here or commit it to source control)
    
    Variable 2:
    - Key: SECRET_KEY

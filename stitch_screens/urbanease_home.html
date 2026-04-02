@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#ffb598",
+                        "tertiary": "#51d7f4",
+                        "on-secondary-fixed": "#360f00",
+                        "on-tertiary-fixed": "#001f26",
+                        "background": "#00142a",
+                        "secondary-fixed": "#ffdbcd",
+                        "primary-fixed": "#ffdbcd",
+                        "inverse-surface": "#d2e4ff",
+                        "on-secondary-fixed-variant": "#6e3820",
+                        "tertiary-container": "#00b0cc",
+                        "tertiary-fixed": "#aaedff",
+                        "on-secondary": "#52220c",
+                        "error": "#ffb4ab",
+                        "surface": "#00142a",
+                        "primary": "#ffb598",
+                        "secondary-fixed-dim": "#ffb598",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "outline": "#a78b80",
+                        "on-secondary-container": "#f3a687",
+                        "surface-bright": "#1d3b5b",
+                        "on-primary": "#591d00",
+                        "surface-container-highest": "#183656",
+                        "inverse-on-surface": "#123252",
+                        "surface-container": "#00203e",
+                        "on-surface-variant": "#dfc0b4",
+                        "secondary": "#ffb598",
+                        "on-surface": "#d2e4ff",
+                        "secondary-container": "#713a22",
+                        "on-tertiary-fixed-variant": "#004e5c",
+                        "primary-container": "#ff7a3d",
+                        "on-background": "#d2e4ff",
+                        "outline-variant": "#584239",
+                        "surface-container-lowest": "#000f21",
+                        "surface-dim": "#00142a",
+                        "on-tertiary-container": "#003d49",
+                        "surface-container-low": "#001c37",
+                        "on-primary-fixed": "#360f00",
+                        "on-primary-fixed-variant": "#7e2c00",
+                        "surface-container-high": "#092b4b",
+                        "surface-variant": "#183656",
+                        "inverse-primary": "#a53c00",
+                        "on-primary-container": "#652200",
+                        "primary-fixed-dim": "#ffb598",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#003640",
+                        "tertiary-fixed-dim": "#51d7f4"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(24, 54, 86, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .hero-gradient {
+            background: linear-gradient(to bottom, rgba(0, 20, 42, 0.4) 0%, rgba(0, 20, 42, 0.9) 100%);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 122, 61, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container selection:text-white overflow-x-hidden">
+<!-- Top Navigation Anchor -->
+<header class="bg-slate-900/60 backdrop-blur-xl fixed top-0 w-full z-50 flex justify-between items-center px-6 h-20 shadow-2xl shadow-orange-500/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-500 text-2xl" style="font-variation-settings: 'FILL' 1;">menu</span>
+<span class="text-2xl font-bold text-white tracking-tighter font-['Space_Grotesk']">UrbanEase</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-orange-500" data-icon="public">public</span>
+</div>
+</header>
+<main class="relative min-h-screen">
+<!-- Hero Background Container -->
+<div class="fixed inset-0 z-0">
+<img alt="Aerial city view" class="w-full h-full object-cover" data-alt="High-resolution aerial view of a smart city at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtzSM7D78wSDvoaQ1K0Z-8kmEjDxA8wfXK3l6twgpOHdPUfH0vbiTVTBPAuI-dll43A_Wwz7TQqaA0MXHLtbzhssqthdA_mZHktjZxjyxzsQcyDShMaLMZhtyFaaioffnhP6H0o2x21gBSmnc_93YxfbQ4cSLRFiuKutp0BLtxKKbwUZGTRn0_QVq6frgF7mZXpFLLxYqgt1H4e2skiGFedFu_TszmSy1JeQIV4RCfxXGIgG7CHldJaQ2L1KHBPRTCUAZboSuaPg"/>
+<div class="absolute inset-0 hero-gradient"></div>
+</div>
+<!-- Content Canvas -->
+<section class="relative z-10 pt-32 pb-40 px-6 max-w-lg mx-auto md:max-w-7xl md:grid md:grid-cols-2 md:gap-12 min-h-screen flex flex-col justify-end">
+<div class="flex flex-col justify-center space-y-8">
+<!-- Tagline & Heading -->
+<div class="space-y-4">
+<span class="inline-block px-3 py-1 bg-primary-container/20 text-primary-container text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm border border-primary-container/30">
+                        The Ethereal Sentinel
+                    </span>
+<p class="font-headline font-light text-tertiary tracking-wide text-sm">
+                        Empowering Smart Cities With Efficient Public Services
+                    </p>
+<h1 class="font-headline font-extrabold text-4xl sm:text-5xl leading-tight tracking-tighter">
+<span class="text-white block">SMART CITY</span>
+<span class="text-primary-container block text-glow">SERVICE MANAGEMENT</span>
+</h1>
+<p class="text-slate-300 font-body text-base max-w-sm leading-relaxed opacity-90">
+                        Report issues, manage civic services, and stay updated with real-time city operations.
+                    </p>
+</div>
+<!-- CTA Actions -->
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary-container text-on-primary-container font-bold px-8 py-4 rounded-xl shadow-lg shadow-primary-container/20 active:scale-95 transition-all duration-200">
+                        Get Started
+                    </button>
+<button class="glass-panel text-white font-bold px-8 py-4 rounded-xl border border-white/10 active:scale-95 transition-all duration-200">
+                        View Map
+                    </button>
+</div>
+</div>
+<!-- Side Info Panel (Glassmorphism) -->
+<div class="mt-12 md:mt-0 flex flex-col justify-center">
+<div class="glass-panel rounded-3xl p-8 border border-white/5 shadow-2xl space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline font-bold text-xl text-white tracking-tight">City Updates</h3>
+<span class="material-symbols-outlined text-tertiary animate-pulse" style="font-variation-settings: 'FILL' 1;">sensors</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="construction">construction</span>
+<span class="text-sm font-medium text-slate-100">Road Maintenance</span>
+</div>
+<span class="text-[10px] font-bold text-tertiary tracking-widest uppercase">Active</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="delete">delete</span>
+<span class="text-sm font-medium text-slate-100">Waste Collection</span>
+</div>
+<span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Scheduled</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="water_drop">water_drop</span>
+<span class="text-sm font-medium text-slate-100">Water Supply</span>
+</div>
+<span class="text-[10px] font-bold text-tertiary tracking-widest uppercase">Optimal</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="bolt">bolt</span>
+<span class="text-sm font-medium text-slate-100">Electricity</span>
+</div>
+<span class="text-[10px] font-bold text-tertiary tracking-widest uppercase">Stable</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="forum">forum</span>
+<span class="text-sm font-medium text-slate-100">Complaints</span>
+</div>
+<div class="bg-primary-container/20 px-2 py-0.5 rounded text-[10px] font-bold text-primary-container">12 NEW</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Service Icons Quick Access -->
+<section class="relative z-10 px-6 pb-32">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
+<div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col items-center gap-3 group hover:bg-white/10 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container text-3xl group-hover:scale-110 transition-transform" data-icon="report_problem">report_problem</span>
+<span class="text-xs font-bold text-white uppercase tracking-wider">Report Issues</span>
+</div>
+<div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col items-center gap-3 group hover:bg-white/10 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container text-3xl group-hover:scale-110 transition-transform" data-icon="engineering">engineering</span>
+<span class="text-xs font-bold text-white uppercase tracking-wider">Service Requests</span>
+</div>
+<div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col items-center gap-3 group hover:bg-white/10 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container text-3xl group-hover:scale-110 transition-transform" data-icon="notifications_active">notifications_active</span>
+<span class="text-xs font-bold text-white uppercase tracking-wider">City Alerts</span>
+</div>
+<div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col items-center gap-3 group hover:bg-white/10 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-primary-container text-3xl group-hover:scale-110 transition-transform" data-icon="message">message</span>
+<span class="text-xs font-bold text-white uppercase tracking-wider">Notifications</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="bg-slate-900/80 backdrop-blur-2xl fixed bottom-0 left-0 w-full flex justify-around items-center pt-3 pb-6 px-4 rounded-t-3xl z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.4)] md:hidden">
+<a class="flex flex-col items-center justify-center text-slate-400 hover:bg-slate-800/50 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="report_problem">report_problem</span>
+<span class="font-['Manrope'] text-[10px] font-bold uppercase tracking-widest mt-1">Report</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:bg-slate-800/50 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="engineering">engineering</span>
+<span class="font-['Manrope'] text-[10px] font-bold uppercase tracking-widest mt-1">Services</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 hover:bg-slate-800/50 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-['Manrope'] text-[10px] font-bold uppercase tracking-widest mt-1">Alerts</span>
+</a>
+<!-- Updates is the Active Tab for this landing/status page -->
+<a class="flex flex-col items-center justify-center text-orange-500 bg-orange-500/10 rounded-xl px-3 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="message" style="font-variation-settings: 'FILL' 1;">message</span>
+<span class="font-['Manrope'] text-[10px] font-bold uppercase tracking-widest mt-1 text-orange-500">Updates</span>
+</a>
+</nav>
+<!-- FAB for quick action -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center z-40 active:scale-90 transition-transform md:bottom-10">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

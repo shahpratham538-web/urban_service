@@ -1,0 +1,615 @@
+[
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$Hax2ixBjtvydXFkLICBWYq$rydHJANnB2vfSB6yLU63zbt3vGcIHj1ucB5EriZPiu4=",
+        "last_login": "2026-03-27T08:15:10.872Z",
+        "email": "admin@test.com",
+        "name": "Test Admin",
+        "role": "admin",
+        "is_active": true,
+        "is_staff": true,
+        "is_admin": true,
+        "created_at": "2026-03-20T13:23:08.532Z"
+    }
+},
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$kMG6grVcZucaGCrTvQuBKj$VtX7G+P9xzY19HFcUbVwMqH7fJ9ab5jJoubnILYk4bw=",
+        "last_login": "2026-03-27T08:07:39.388Z",
+        "email": "provider@test.com",
+        "name": "Test Provider",
+        "role": "provider",
+        "is_active": true,
+        "is_staff": false,
+        "is_admin": false,
+        "created_at": "2026-03-20T13:23:09.513Z"
+    }
+},
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$N1ziAxMtURo6dyM33qRx8K$MUiqNuuUPsB9XFicsGzgqCncWOW9YeQaDon08fkbGwc=",
+        "last_login": "2026-03-27T07:58:39.117Z",
+        "email": "resident@test.com",
+        "name": "Test Resident",
+        "role": "resident",
+        "is_active": true,
+        "is_staff": false,
+        "is_admin": false,
+        "created_at": "2026-03-20T13:23:10.466Z"
+    }
+},
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$Lz2uBH20iNdGTz8dnu3OBO$WGopXyA15XYD9IyEeqc4dojFAkapX5320FPgYPh7Quo=",
+        "last_login": "2026-03-27T08:22:44.641Z",
+        "email": "support@test.com",
+        "name": "Test Support",
+        "role": "support",
+        "is_active": true,
+        "is_staff": false,
+        "is_admin": false,
+        "created_at": "2026-03-20T13:23:11.295Z"
+    }
+},
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$wOpcvXHYp20ZbnEOAXFrgI$AOCRuSvKkOYlHS3R9mfYZLzofnOBmYxdULBERe0E+/0=",
+        "last_login": "2026-03-27T08:14:30.958Z",
+        "email": "plumber@test.com",
+        "name": "Raj Kumar",
+        "role": "provider",
+        "is_active": true,
+        "is_staff": false,
+        "is_admin": false,
+        "created_at": "2026-03-27T07:49:16.562Z"
+    }
+},
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$wVUE7gph5I5FFmR7l2Cpdu$htRZD6mAx3EmSDn0aBhKtT+cozY5Z4rmDH53EbQND7w=",
+        "last_login": null,
+        "email": "cleaner@test.com",
+        "name": "Priya Sharma",
+        "role": "provider",
+        "is_active": true,
+        "is_staff": false,
+        "is_admin": false,
+        "created_at": "2026-03-27T07:49:17.040Z"
+    }
+},
+{
+    "model": "core.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$rlIXJhlBKJy823d1uVi8Uu$sbSfSNkRU54++0lqAP46PYO9xTJs2HdQ6dwHoNpACmo=",
+        "last_login": null,
+        "email": "electrician@test.com",
+        "name": "Amit Patel",
+        "role": "provider",
+        "is_active": true,
+        "is_staff": false,
+        "is_admin": false,
+        "created_at": "2026-03-27T07:49:17.496Z"
+    }
+},
+{
+    "model": "service.category",
+    "pk": 1,
+    "fields": {
+        "name": "Plumbing",
+        "description": "Pipe repairs, drain cleaning, fixture installation and all water-related services.",
+        "icon": "fa-wrench",
+        "created_at": "2026-03-27T07:49:01.573Z"
+    }
+},
+{
+    "model": "service.category",
+    "pk": 2,
+    "fields": {
+        "name": "House Cleaning",
+        "description": "Deep cleaning, regular maintenance, move-in/out cleaning services.",
+        "icon": "fa-broom",
+        "created_at": "2026-03-27T07:49:01.591Z"
+    }
+},
+{
+    "model": "service.category",
+    "pk": 3,
+    "fields": {
+        "name": "Electrical",
+        "description": "Wiring repairs, fixture installation, safety inspections and electrical services.",
+        "icon": "fa-bolt",
+        "created_at": "2026-03-27T07:49:01.592Z"
+    }
+},
+{
+    "model": "service.service",
+    "pk": 1,
+    "fields": {
+        "serviceName": "Pipe Repair & Replacement",
+        "serviceDescription": "Expert pipe repair and replacement service. We handle leaking pipes, burst pipes, and complete re-piping for kitchens, bathrooms, and outdoor plumbing. All work comes with a 30-day warranty.",
+        "servicePrize": "500.00",
+        "serviceImage": "",
+        "category": 1,
+        "provider": [
+            "plumber@test.com"
+        ],
+        "is_active": true,
+        "created_at": "2026-03-27T07:49:17.512Z",
+        "updated_at": "2026-03-27T07:49:17.512Z"
+    }
+},
+{
+    "model": "service.service",
+    "pk": 2,
+    "fields": {
+        "serviceName": "Drain Cleaning & Unclogging",
+        "serviceDescription": "Professional drain cleaning service using advanced equipment. We clear blocked drains in sinks, showers, and floor drains. Includes camera inspection for stubborn clogs.",
+        "servicePrize": "350.00",
+        "serviceImage": "",
+        "category": 1,
+        "provider": [
+            "plumber@test.com"
+        ],
+        "is_active": true,
+        "created_at": "2026-03-27T07:49:17.522Z",
+        "updated_at": "2026-03-27T07:49:17.522Z"
+    }
+},
+{
+    "model": "service.service",
+    "pk": 3,
+    "fields": {
+        "serviceName": "Deep Home Cleaning",
+        "serviceDescription": "Complete deep cleaning of your entire home — living room, bedrooms, kitchen, and bathrooms. Includes floor scrubbing, appliance cleaning, window cleaning, and dusting of all surfaces.",
+        "servicePrize": "800.00",
+        "serviceImage": "",
+        "category": 2,
+        "provider": [
+            "cleaner@test.com"
+        ],
+        "is_active": true,
+        "created_at": "2026-03-27T07:49:17.524Z",
+        "updated_at": "2026-03-27T07:49:17.524Z"
+    }
+},
+{
+    "model": "service.service",
+    "pk": 4,
+    "fields": {
+        "serviceName": "Kitchen Deep Cleaning",
+        "serviceDescription": "Intensive kitchen cleaning service. Covers chimney, gas stove, countertops, cabinets, sink, tiles, and floor. All food-safe cleaning products used.",
+        "servicePrize": "450.00",
+        "serviceImage": "",
+        "category": 2,
+        "provider": [
+            "cleaner@test.com"
+        ],
+        "is_active": true,
+        "created_at": "2026-03-27T07:49:17.526Z",
+        "updated_at": "2026-03-27T07:49:17.526Z"
+    }
+},
+{
+    "model": "service.service",
+    "pk": 5,
+    "fields": {
+        "serviceName": "Electrical Wiring Repair",
+        "serviceDescription": "Complete electrical wiring inspection and repair. We fix faulty wiring, short circuits, flickering lights, and overloaded circuits. All work follows safety code standards.",
+        "servicePrize": "600.00",
+        "serviceImage": "",
+        "category": 3,
+        "provider": [
+            "electrician@test.com"
+        ],
+        "is_active": true,
+        "created_at": "2026-03-27T07:49:17.528Z",
+        "updated_at": "2026-03-27T07:49:17.528Z"
+    }
+},
+{
+    "model": "service.service",
+    "pk": 6,
+    "fields": {
+        "serviceName": "Light & Fan Installation",
+        "serviceDescription": "Professional installation of ceiling fans, chandeliers, LED panels, decorative lights, and exhaust fans. Includes wiring, mounting, and testing.",
+        "servicePrize": "400.00",
+        "serviceImage": "",
+        "category": 3,
+        "provider": [
+            "electrician@test.com"
+        ],
+        "is_active": true,
+        "created_at": "2026-03-27T07:49:17.530Z",
+        "updated_at": "2026-03-27T07:49:17.530Z"
+    }
+},
+{
+    "model": "service.booking",
+    "pk": 1,
+    "fields": {
+        "service": 1,
+        "resident": [
+            "resident@test.com"
+        ],
+        "booking_date": "2026-03-27T07:49:17.546Z",
+        "scheduled_date": "2026-03-30T07:49:17.540Z",
+        "status": "pending",
+        "notes": "Kitchen sink pipe is leaking. Please bring replacement parts."
+    }
+},
+{
+    "model": "service.booking",
+    "pk": 2,
+    "fields": {
+        "service": 3,
+        "resident": [
+            "resident@test.com"
+        ],
+        "booking_date": "2026-03-27T07:49:17.556Z",
+        "scheduled_date": "2026-04-01T07:49:17.540Z",
+        "status": "accepted",
+        "notes": "3 BHK apartment, need complete deep cleaning before a family event."
+    }
+},
+{
+    "model": "service.booking",
+    "pk": 3,
+    "fields": {
+        "service": 5,
+        "resident": [
+            "resident@test.com"
+        ],
+        "booking_date": "2026-03-27T07:49:17.558Z",
+        "scheduled_date": "2026-03-25T07:49:17.540Z",
+        "status": "completed",
+        "notes": "Frequent short circuits in bedroom. Need full wiring check."
+    }
+},
+{
+    "model": "service.booking",
+    "pk": 4,
+    "fields": {
+        "service": 6,
+        "resident": [
+            "resident@test.com"
+        ],
+        "booking_date": "2026-03-27T07:49:17.561Z",
+        "scheduled_date": "2026-03-28T07:49:17.540Z",
+        "status": "cancelled",
+        "notes": "Need 2 ceiling fans installed in new rooms."
+    }
+},
+{
+    "model": "service.review",
+    "pk": 1,
+    "fields": {
+        "booking": 3,
+        "rating": 5,
+        "comment": "Amit was very professional and thorough. Fixed all the wiring issues quickly. Highly recommended!",
+        "created_at": "2026-03-27T07:49:17.566Z"
+    }
+},
+{
+    "model": "service.payment",
+    "pk": 1,
+    "fields": {
+        "booking": 3,
+        "amount": "600.00",
+        "status": "completed",
+        "transaction_id": "1003D4E6-649",
+        "paid_at": "2026-03-27T07:49:17.574Z",
+        "created_at": "2026-03-27T07:49:17.574Z"
+    }
+},
+{
+    "model": "service.ticket",
+    "pk": 1,
+    "fields": {
+        "raised_by": [
+            "resident@test.com"
+        ],
+        "assigned_to": [
+            "support@test.com"
+        ],
+        "booking": null,
+        "subject": "Service provider didn't show up on scheduled date",
+        "description": "I booked a Deep Home Cleaning service for last Saturday but the provider did not arrive. I waited the entire morning. Please look into this and reschedule or refund.",
+        "priority": "high",
+        "status": "closed",
+        "created_at": "2026-03-27T07:49:17.585Z",
+        "updated_at": "2026-03-27T08:27:48.875Z"
+    }
+},
+{
+    "model": "service.ticket",
+    "pk": 2,
+    "fields": {
+        "raised_by": [
+            "provider@test.com"
+        ],
+        "assigned_to": [
+            "support@test.com"
+        ],
+        "booking": null,
+        "subject": "Payment not received for completed booking",
+        "description": "I completed a plumbing service 3 days ago but the payment still shows as pending. The resident confirmed they paid. Please check the transaction status.",
+        "priority": "medium",
+        "status": "in_progress",
+        "created_at": "2026-03-27T07:49:17.590Z",
+        "updated_at": "2026-03-27T07:49:17.590Z"
+    }
+},
+{
+    "model": "service.ticket",
+    "pk": 3,
+    "fields": {
+        "raised_by": [
+            "resident@test.com"
+        ],
+        "assigned_to": [
+            "support@test.com"
+        ],
+        "booking": null,
+        "subject": "Wrong service category shown on listing",
+        "description": "The 'Kitchen Deep Cleaning' service is showing under the wrong category when I filter by Plumbing. It should be under House Cleaning.",
+        "priority": "low",
+        "status": "closed",
+        "created_at": "2026-03-27T07:49:17.596Z",
+        "updated_at": "2026-03-27T08:27:35.387Z"
+    }
+},
+{
+    "model": "service.message",
+    "pk": 1,
+    "fields": {
+        "booking": 4,
+        "sender": [
+            "resident@test.com"
+        ],
+        "content": "very good",
+        "created_at": "2026-03-27T08:07:04.255Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "plumber@test.com"
+        ],
+        "message": "New booking from Test Resident for \"Pipe Repair & Replacement\".",
+        "notification_type": "booking",
+        "is_read": false,
+        "link": "/service/provider-bookings/",
+        "created_at": "2026-03-27T07:49:17.549Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "cleaner@test.com"
+        ],
+        "message": "New booking from Test Resident for \"Deep Home Cleaning\".",
+        "notification_type": "booking",
+        "is_read": false,
+        "link": "/service/provider-bookings/",
+        "created_at": "2026-03-27T07:49:17.557Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "electrician@test.com"
+        ],
+        "message": "New booking from Test Resident for \"Electrical Wiring Repair\".",
+        "notification_type": "booking",
+        "is_read": false,
+        "link": "/service/provider-bookings/",
+        "created_at": "2026-03-27T07:49:17.559Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "electrician@test.com"
+        ],
+        "message": "New booking from Test Resident for \"Light & Fan Installation\".",
+        "notification_type": "booking",
+        "is_read": false,
+        "link": "/service/provider-bookings/",
+        "created_at": "2026-03-27T07:49:17.562Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 5,
+    "fields": {
+        "user": [
+            "electrician@test.com"
+        ],
+        "message": "Test Resident left a 5★ review for \"Electrical Wiring Repair\".",
+        "notification_type": "booking",
+        "is_read": false,
+        "link": "/service/provider-reviews/",
+        "created_at": "2026-03-27T07:49:17.570Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 6,
+    "fields": {
+        "user": [
+            "electrician@test.com"
+        ],
+        "message": "Payment of ₹600.00 received for \"Electrical Wiring Repair\".",
+        "notification_type": "payment",
+        "is_read": false,
+        "link": "/service/provider-earnings/",
+        "created_at": "2026-03-27T07:49:17.577Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 7,
+    "fields": {
+        "user": [
+            "support@test.com"
+        ],
+        "message": "New ticket raised: \"Service provider didn't show up on scheduled date\" by Test Resident.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/support-tickets/",
+        "created_at": "2026-03-27T07:49:17.589Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 8,
+    "fields": {
+        "user": [
+            "support@test.com"
+        ],
+        "message": "New ticket raised: \"Payment not received for completed booking\" by Test Provider.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/support-tickets/",
+        "created_at": "2026-03-27T07:49:17.594Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 9,
+    "fields": {
+        "user": [
+            "support@test.com"
+        ],
+        "message": "New ticket raised: \"Wrong service category shown on listing\" by Test Resident.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/support-tickets/",
+        "created_at": "2026-03-27T07:49:17.597Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 10,
+    "fields": {
+        "user": [
+            "electrician@test.com"
+        ],
+        "message": "New message from Test Resident on booking \"Light & Fan Installation\".",
+        "notification_type": "message",
+        "is_read": false,
+        "link": "/service/conversation/4/",
+        "created_at": "2026-03-27T08:07:04.261Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 11,
+    "fields": {
+        "user": [
+            "resident@test.com"
+        ],
+        "message": "Your ticket \"Wrong service category shown on listing\" has been updated to: in_progress.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/my-tickets/",
+        "created_at": "2026-03-27T08:27:30.030Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 12,
+    "fields": {
+        "user": [
+            "resident@test.com"
+        ],
+        "message": "Your ticket \"Wrong service category shown on listing\" has been updated to: resolved.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/my-tickets/",
+        "created_at": "2026-03-27T08:27:33.214Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 13,
+    "fields": {
+        "user": [
+            "resident@test.com"
+        ],
+        "message": "Your ticket \"Wrong service category shown on listing\" has been updated to: closed.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/my-tickets/",
+        "created_at": "2026-03-27T08:27:35.391Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 14,
+    "fields": {
+        "user": [
+            "resident@test.com"
+        ],
+        "message": "Your ticket \"Service provider didn't show up on scheduled date\" has been updated to: in_progress.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/my-tickets/",
+        "created_at": "2026-03-27T08:27:44.153Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 15,
+    "fields": {
+        "user": [
+            "resident@test.com"
+        ],
+        "message": "Your ticket \"Service provider didn't show up on scheduled date\" has been updated to: resolved.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/my-tickets/",
+        "created_at": "2026-03-27T08:27:47.192Z"
+    }
+},
+{
+    "model": "service.notification",
+    "pk": 16,
+    "fields": {
+        "user": [
+            "resident@test.com"
+        ],
+        "message": "Your ticket \"Service provider didn't show up on scheduled date\" has been updated to: closed.",
+        "notification_type": "ticket",
+        "is_read": false,
+        "link": "/service/my-tickets/",
+        "created_at": "2026-03-27T08:27:48.882Z"
+    }
+},
+{
+    "model": "service.sitesettings",
+    "pk": 1,
+    "fields": {
+        "site_name": "Urban Service Platform",
+        "support_email": "support@urbanservice.com",
+        "payment_gateway": "simulated",
+        "enable_notifications": true,
+        "maintenance_mode": false,
+        "updated_at": "2026-03-20T13:34:07.173Z"
+    }
+}
+]
