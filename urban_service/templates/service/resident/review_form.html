@@ -1,17 +1,109 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="mb-8">
+        <a href="{% url 'resident_bookings' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-wider mb-6 group">
+            <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            Back to Bookings
+        </a>
+        <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block mt-4">Feedback</span>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">LEAVE A REVIEW</h2>
+    </div>
 
-<h2>Leave a Review</h2>
+    <div class="max-w-2xl mx-auto">
+        <!-- Service Info Card -->
+        <div class="bg-surface-container-low rounded-2xl border border-surface-container p-6 mb-6 flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-amber-400/10 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-amber-400 text-3xl">star_rate</span>
+            </div>
+            <div>
+                <h3 class="font-headline text-xl font-bold text-white">{{ booking.service.serviceName }}</h3>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="material-symbols-outlined text-[16px] text-slate-400">person</span>
+                    <span class="text-slate-400 text-sm">{{ booking.service.provider.name }}</span>
+                </div>
+            </div>
+        </div>
 
-<p><strong>Service:</strong> {{ booking.service.serviceName }}</p>
-<p><strong>Provider:</strong> {{ booking.service.provider.name }}</p>
+        <!-- Review Form Card -->
+        <div class="bg-surface-container-low rounded-2xl border border-surface-container p-8">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-12 h-12 rounded-xl bg-amber-400/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-amber-400 text-2xl">rate_review</span>
+                </div>
+                <div>
+                    <h3 class="font-headline text-xl font-bold text-white">Share Your Experience</h3>
+                    <p class="text-slate-400 text-sm">Help other residents make informed decisions.</p>
+                </div>
+            </div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Review</button>
-    <a href="{% url 'resident_bookings' %}">Cancel</a>
-</form>
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
 
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative">
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                        <p class="text-slate-500 text-xs mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="text-red-400 text-xs mt-1 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">error</span>
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-surface-container">
+                    <button type="submit" class="flex-1 flex items-center justify-center gap-2 py-4 bg-amber-500 hover:bg-amber-600 text-white font-bold uppercase tracking-wider text-sm rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)]">
+                        <span class="material-symbols-outlined text-[20px]">send</span>
+                        Submit Review
+                    </button>
+                    <a href="{% url 'resident_bookings' %}" class="flex-1 flex items-center justify-center gap-2 py-4 bg-surface-container-high hover:bg-surface-container-highest text-slate-300 hover:text-white font-bold uppercase tracking-wider text-sm rounded-xl border border-surface-variant transition-all duration-300">
+                        <span class="material-symbols-outlined text-[20px]">close</span>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<style>
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: #092b4b;
+        border: 1px solid #183656;
+        border-radius: 0.75rem;
+        color: #d2e4ff;
+        font-family: 'Manrope', sans-serif;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+        outline: none;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+</style>
 {% endblock %}

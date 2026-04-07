@@ -1,44 +1,53 @@
 ============================================================
-  Urban Service Platform — Test Login Credentials
+  URBAN SERVICE PLATFORM — TEST LOGIN CREDENTIALS
 ============================================================
+
+Below are the default test credentials for each user role in the platform.
+These can be used for logging into http://127.0.0.1:8000/login/
 
 1. ADMIN
    Email:    admin@test.com
    Password: admin123456
-   Dashboard: /admin-dashboard/
+   Role:     Platform Administrator
+   Access:   System settings, user management, analytics.
 
-2. PROVIDER
-   Email:    provider@test.com
-   Password: provider123456
-   Dashboard: /provider-dashboard/
-
-3. RESIDENT
+2. RESIDENT (Consumer)
    Email:    resident@test.com
    Password: resident123456
-   Dashboard: /resident-dashboard/
+   Role:     Standard User / Resident
+   Access:   Browse services, book appointments, make payments, leave reviews.
 
-4. SUPPORT
+3. SUPPORT
    Email:    support@test.com
    Password: support123456
-   Dashboard: /support-dashboard/
+   Role:     Customer Support Agent
+   Access:   Manage and resolve user tickets, quality monitoring.
 
-============================================================
-  Login URL: http://127.0.0.1:8000/login/
-============================================================
+4. PRIMARY PROVIDER
+   Email:    provider@test.com
+   Password: provider123456
+   Role:     Service Provider
+   Access:   Manage bookings, availability, earnings.
 
---- NEW SEEDED PROVIDERS ---
+------------------------------------------------------------
+  SEEDED SPECIALIZED PROVIDERS
+------------------------------------------------------------
 
-5. PROVIDER (Plumber - Raj Kumar)
+5. RAJ KUMAR (Plumber)
    Email:    plumber@test.com
    Password: provider123456
-   Dashboard: /provider-dashboard/
+   Category: Plumbing
 
-6. PROVIDER (House Cleaning - Priya Sharma)
+6. PRIYA SHARMA (House Cleaning)
    Email:    cleaner@test.com
    Password: provider123456
-   Dashboard: /provider-dashboard/
+   Category: House Cleaning
 
-7. PROVIDER (Electrician - Amit Patel)
+7. AMIT PATEL (Electrician)
    Email:    electrician@test.com
    Password: provider123456
-   Dashboard: /provider-dashboard/
+   Category: Electrical
+
+============================================================
+  LOGIN URL: http://127.0.0.1:8000/login/
+============================================================

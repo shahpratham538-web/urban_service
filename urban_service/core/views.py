@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .decorators import role_required
 from django.contrib.auth import logout
+from service.models import Booking
 
 def homeView(request):
     """Landing page for the Urban Service Platform."""
@@ -87,7 +88,16 @@ def providerDashboardView(request):
 
 @role_required(allowed_roles=['resident'])
 def residentDashboardView(request):
-    return render(request,"urban_service/resident/resident_dashboard.html")
+    # Bookings that are completed by the provider but not yet paid by the resident
+    pending_payments = Booking.objects.filter(
+        resident=request.user,
+        status='completed',
+        payment__isnull=True,
+    ).select_related('service', 'service__provider')
+
+    return render(request, "urban_service/resident/resident_dashboard.html", {
+        "pending_payments": pending_payments,
+    })
 
 
 @role_required(allowed_roles=['support'])

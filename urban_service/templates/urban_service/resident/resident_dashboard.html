@@ -9,9 +9,61 @@
         </div>
     </div>
 
-    <div class="flex items-center justify-between mb-8">
+    <!-- ===== PENDING PAYMENTS ALERT BANNER ===== -->
+    {% if pending_payments %}
+    <div class="mb-8">
+        <div class="bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent rounded-2xl border border-emerald-500/30 p-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+            <div class="flex items-start gap-4 mb-5">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                    <span class="material-symbols-outlined text-emerald-400 text-2xl">pending_actions</span>
+                </div>
+                <div>
+                    <h3 class="font-headline text-xl font-bold text-emerald-400 uppercase tracking-wide">
+                        Action Required — Payment Pending
+                    </h3>
+                    <p class="text-slate-400 text-sm mt-1">
+                        {{ pending_payments|length }} service{{ pending_payments|length|pluralize }} completed — please pay to finalise.
+                    </p>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                {% for booking in pending_payments %}
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#00142a]/60 rounded-xl p-4 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-300">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-emerald-400 text-xl">home_repair_service</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white text-sm">{{ booking.service.serviceName }}</p>
+                            <p class="text-slate-400 text-xs mt-0.5">
+                                By {{ booking.service.provider.name }}
+                                {% if booking.scheduled_date %}
+                                    &nbsp;·&nbsp; {{ booking.scheduled_date|date:"M d, Y" }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 sm:shrink-0">
+                        <span class="text-xl font-black text-emerald-400 font-headline">₹{{ booking.service.servicePrize }}</span>
+                        <a href="{% url 'make_payment' booking.id %}"
+                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-bold uppercase tracking-wider text-xs rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] whitespace-nowrap">
+                            <span class="material-symbols-outlined text-[18px]">payments</span>
+                            Pay Now
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!-- ===== END PENDING PAYMENTS ===== -->
+
+    <div class="flex items-center justify-between mb-6">
         <h3 class="font-headline text-2xl font-bold text-white">Resident Actions</h3>
     </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <a href="{% url 'list_services' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-primary-container">
             <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
@@ -22,6 +74,7 @@
                 <p class="text-slate-400 text-sm mt-1">Find and book urban services.</p>
             </div>
         </a>
+
         <a href="{% url 'resident_bookings' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-tertiary">
             <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-tertiary text-3xl">calendar_month</span>
@@ -31,6 +84,7 @@
                 <p class="text-slate-400 text-sm mt-1">View your upcoming appointments.</p>
             </div>
         </a>
+
         <a href="{% url 'order_history' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-slate-400">
             <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-slate-400 text-3xl">history</span>
@@ -40,6 +94,7 @@
                 <p class="text-slate-400 text-sm mt-1">Review past bookings and services.</p>
             </div>
         </a>
+
         <a href="{% url 'payment_history' %}" class="group bg-surface-container-low hover:bg-surface-container-high transition-colors p-6 rounded-xl flex items-start gap-6 border-l-4 border-emerald-500">
             <div class="w-16 h-16 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-emerald-500 text-3xl">receipt_long</span>

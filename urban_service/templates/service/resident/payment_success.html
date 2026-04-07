@@ -1,21 +1,69 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="max-w-2xl mx-auto text-center">
+        <!-- Success Animation Area -->
+        <div class="mb-10 pt-8">
+            <div class="w-24 h-24 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(16,185,129,0.3)] animate-pulse">
+                <span class="material-symbols-outlined text-emerald-400 text-5xl">check_circle</span>
+            </div>
+            <span class="text-emerald-400 text-xs font-bold tracking-[0.3em] uppercase mb-2 block">Transaction Complete</span>
+            <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">PAYMENT SUCCESSFUL</h2>
+            <p class="text-slate-400 text-sm mt-3">Your payment for <strong class="text-white">{{ booking.service.serviceName }}</strong> has been processed successfully.</p>
+        </div>
 
-<h2>✅ Payment Successful!</h2>
+        <!-- Receipt Card -->
+        <div class="bg-surface-container-low rounded-2xl border border-surface-container overflow-hidden text-left">
+            <div class="bg-gradient-to-r from-emerald-500/10 to-surface-container-low p-6 border-b border-surface-container">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-emerald-400 text-2xl">receipt</span>
+                    <h3 class="font-headline text-lg font-bold text-white uppercase tracking-wider">Payment Receipt</h3>
+                </div>
+            </div>
 
-<p>Your payment for <strong>{{ booking.service.serviceName }}</strong> has been processed successfully.</p>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Transaction ID</span>
+                    <span class="text-white font-mono text-sm font-bold bg-surface-container-high px-3 py-1 rounded-lg">{{ payment.transaction_id }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Service</span>
+                    <span class="text-white font-bold">{{ booking.service.serviceName }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Provider</span>
+                    <span class="text-white font-bold">{{ booking.service.provider.name }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Amount Paid</span>
+                    <span class="text-2xl font-black text-emerald-400 font-headline">₹{{ payment.amount }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Status</span>
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 uppercase tracking-widest inline-flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                        {{ payment.status|title }}
+                    </span>
+                </div>
+                <div class="flex items-center justify-between py-3">
+                    <span class="text-slate-400 text-sm font-medium">Paid At</span>
+                    <span class="text-white font-bold">{{ payment.paid_at|date:"M d, Y h:i A" }}</span>
+                </div>
+            </div>
+        </div>
 
-<table border="1" style="margin:20px 0;">
-    <tr><td><strong>Transaction ID</strong></td><td>{{ payment.transaction_id }}</td></tr>
-    <tr><td><strong>Amount</strong></td><td>₹{{ payment.amount }}</td></tr>
-    <tr><td><strong>Status</strong></td><td>{{ payment.status }}</td></tr>
-    <tr><td><strong>Paid At</strong></td><td>{{ payment.paid_at }}</td></tr>
-</table>
-
-<p>
-    <a href="{% url 'resident_bookings' %}">Back to My Bookings</a> |
-    <a href="{% url 'payment_history' %}">View Payment History</a>
-</p>
-
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
+            <a href="{% url 'resident_bookings' %}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-container hover:bg-primary text-white font-bold uppercase tracking-wider text-sm rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(255,122,61,0.2)] hover:shadow-[0_0_30px_rgba(255,122,61,0.5)]">
+                <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                Back to Bookings
+            </a>
+            <a href="{% url 'payment_history' %}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-surface-container-high hover:bg-surface-container-highest text-slate-300 hover:text-white font-bold uppercase tracking-wider text-sm rounded-xl border border-surface-variant transition-all duration-300">
+                <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                Payment History
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}

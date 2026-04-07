@@ -1,0 +1,45 @@
+# Project Daily Diary
+Project Name: Urban Service Platform
+Reporting Period: Week 7 to Week 12 (Mar 2, 2026 – Apr 10, 2026)
+
+## Week 7 
+Day 1 - Initialized the core Django project and set up the foundation for the core and service applications. Configured environment variables, static files, and initial database settings.
+Day 2 - Designed and implemented a Custom User model (`AbstractBaseUser`) to robustly handle the various platform roles (admin, provider, resident, support) and ran initial migrations.
+Day 3 - Set up user authentication views, including login, signup, and password reset flows for the platform, ensuring correct role-based routing.
+Day 4 - Created the models for Service `Category` and `Service` items. Configured the Django Admin panel for simple content management by platform administrators.
+Day 5 - Created and styled the foundational template structures, including `base.html` and the initial core homepage using the site-wide styles.
+
+## Week 8
+Day 1 - Built out the `Booking` model to establish the primary workflow of residents requesting services. Added status trackers (pending, accepted, in_progress, completed).
+Day 2 - Developed the resident-facing frontend allowing them to browse categories, view individual services, and submit customized booking requests.
+Day 3 - Implemented the `ProviderAvailability` model alongside logic that prevents double-booking and allows providers to set their active days and time slots.
+Day 4 - Created the Provider Dashboard backend logic and templates, enabling providers to visually manage incoming pending bookings and schedule conflicts.
+Day 5 - Implemented the `SiteSettings` singleton model to manage global configurations such as gateway selection and platform name dynamically.
+
+## Week 9
+Day 1 - Integrated the internal `Notification` system to push alerts to residents and providers whenever a booking's status gets updated.
+Day 2 - Built the internal real-time `Message` model structure, laying the groundwork for residents and service providers to chat back and forth regarding an active booking.
+Day 3 - Addressed minor UI bugs in the resident dashboard (`resident_dashboard.html`) and improved the overall responsiveness of service lists on mobile devices.
+Day 4 - Started development on the `Ticket` model for platform customer support, allowing users to raise high/medium/low priority issues.
+Day 5 - Built out views for support staff to manage, assign, and resolve user tickets efficiently from a centralized queue.
+
+## Week 10
+Day 1 - Implemented the foundational `Payment` models and integrated a mocked payment gateway for safe, sandboxed end-to-end testing of transactions.
+Day 2 - Designed and connected the payment confirmation pages (`make_payment.html`), ensuring accurate tracking of transaction IDs and paid statuses.
+Day 3 - Developed the `Review` model so residents can leave 1-5 star ratings and feedback upon the successful completion of a service booking.
+Day 4 - Created logic to aggregate and display average provider ratings on their public profiles and individual service pages.
+Day 5 - Conducted a comprehensive testing pass on the complete Booking lifecycle (Request -> Accept -> Pay -> Complete -> Review).
+
+## Week 11
+Day 1 - Created comprehensive data seeding scripts (`seed_data.py`) and generated a `datadump.json` to safely populate test environments with realistic mock users and services.
+Day 2 - Built specific views mapping out the Provider Earnings pages, including aggregating total historical revenue and active pending balances.
+Day 3 - Refined database queries related to booking history pipelines, heavily utilizing Django ORM optimization (select_related, prefetch_related) to speed up loading times.
+Day 4 - Secured the platform by removing hardcoded credentials, migrating all sensitive variables to the `.env` file, and patching loose view permissions.
+Day 5 - Wrote the initial iteration of the database ER diagram (`dbml`) structure for accurate architecture documentation and hand-off.
+
+## Week 12
+Day 1 - Addressed several edge-case migration errors and resolved inconsistent file indentations flagged during code audits.
+Day 2 - Optimized media file logic for user avatars and `ServiceImage` uploads, configuring correct paths and storage logic.
+Day 3 - Improved overall aesthetic UI touches, standardizing standard site modals, buttons, and alert styling across CSS/JS files.
+Day 4 - Executed local staging trial runs. Discovered and resolved bugs related to the development server startup dependencies (`build.sh`).
+Day 5 - Finalized the comprehensive wrap-up documentation. Cleaned up legacy unneeded views, updated `requirements.txt`, and finalized the final project state.

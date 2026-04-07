@@ -1,24 +1,81 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="mb-12">
+    <div class="mb-8">
+        <a href="{% url 'resident_bookings' %}" class="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm font-bold uppercase tracking-wider mb-6 group">
+            <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            Back to Bookings
+        </a>
+        <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block mt-4">Checkout</span>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight">MAKE PAYMENT</h2>
+    </div>
 
-<h2>Pay for Booking</h2>
+    <div class="max-w-2xl mx-auto">
+        <!-- Payment Card -->
+        <div class="bg-surface-container-low rounded-2xl border border-surface-container overflow-hidden">
+            <!-- Header with gradient -->
+            <div class="bg-gradient-to-r from-emerald-500/10 via-tertiary/5 to-surface-container-low p-8 border-b border-surface-container">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-emerald-400 text-3xl">payments</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline text-2xl font-bold text-white">{{ booking.service.serviceName }}</h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="material-symbols-outlined text-[16px] text-slate-400">person</span>
+                            <span class="text-slate-400 text-sm">{{ booking.service.provider.name }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<p><strong>Service:</strong> {{ booking.service.serviceName }}</p>
-<p><strong>Provider:</strong> {{ booking.service.provider.name }}</p>
-<p><strong>Scheduled:</strong> {{ booking.scheduled_date|default:"Not specified" }}</p>
+            <!-- Order Details -->
+            <div class="p-8 space-y-4">
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Service</span>
+                    <span class="text-white font-bold">{{ booking.service.serviceName }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Provider</span>
+                    <span class="text-white font-bold">{{ booking.service.provider.name }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Scheduled Date</span>
+                    <span class="text-white font-bold">{{ booking.scheduled_date|date:"M d, Y h:i A"|default:"Not specified" }}</span>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-surface-container/50">
+                    <span class="text-slate-400 text-sm font-medium">Booking ID</span>
+                    <span class="text-white font-mono text-sm">#{{ booking.id }}</span>
+                </div>
 
-<hr>
+                <!-- Amount Due - Highlighted -->
+                <div class="flex items-center justify-between py-5 mt-4 bg-emerald-500/5 rounded-xl px-5 border border-emerald-500/20">
+                    <span class="text-emerald-400 text-sm font-bold uppercase tracking-wider">Amount Due</span>
+                    <span class="text-4xl font-black text-emerald-400 font-headline">₹{{ booking.service.servicePrize }}</span>
+                </div>
 
-<p><strong>Amount Due:</strong> ₹{{ booking.service.servicePrize }}</p>
+                <!-- Simulated Payment Notice -->
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-surface-container-high/50 border border-surface-container mt-4">
+                    <span class="material-symbols-outlined text-tertiary text-xl mt-0.5">info</span>
+                    <p class="text-slate-400 text-sm leading-relaxed">This is a simulated payment. Click the button below to complete the transaction instantly.</p>
+                </div>
 
-<form method="post">
-    {% csrf_token %}
-    <p><em>This is a simulated payment. Click below to complete the transaction.</em></p>
-    <button type="submit" style="background:green; color:white; padding:10px 20px; font-size:16px; cursor:pointer;">
-        Pay ₹{{ booking.service.servicePrize }}
-    </button>
-    <a href="{% url 'resident_bookings' %}" style="margin-left:10px;">Cancel</a>
-</form>
-
+                <!-- Action Buttons -->
+                <form method="post" class="pt-4">
+                    {% csrf_token %}
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="flex-1 flex items-center justify-center gap-3 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-wider text-sm rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(16,185,129,0.3)] hover:shadow-[0_0_35px_rgba(16,185,129,0.5)]">
+                            <span class="material-symbols-outlined text-[22px]">lock</span>
+                            Pay ₹{{ booking.service.servicePrize }}
+                        </button>
+                        <a href="{% url 'resident_bookings' %}" class="flex items-center justify-center gap-2 py-4 px-8 bg-surface-container-high hover:bg-surface-container-highest text-slate-300 hover:text-white font-bold uppercase tracking-wider text-sm rounded-xl border border-surface-variant transition-all duration-300">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
