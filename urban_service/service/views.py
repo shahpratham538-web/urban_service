@@ -1,5 +1,11 @@
+import os
+import json
+import hmac
+import hashlib
+
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.db.models import Sum, Count, Avg
 from django.core.paginator import Paginator
@@ -479,25 +485,68 @@ def adminSettings(request):
 
 @role_required(allowed_roles=['resident'])
 def makePayment(request, booking_id):
-    """Simulate payment for a completed booking."""
+    """Initiate Razorpay payment for a completed booking."""
+    import razorpay
+
     booking = get_object_or_404(Booking, id=booking_id, resident=request.user)
 
     if booking.status != 'completed' or hasattr(booking, 'payment'):
         return redirect("resident_bookings")
 
-    if request.method == "POST":
-        import uuid
-        from django.utils import timezone
+    # Amount in paise (Razorpay requires smallest currency unit)
+    amount_in_paise = int(booking.service.servicePrize * 100)
 
+    client = razorpay.Client(
+        auth=(os.environ.get('RAZORPAY_KEY_ID'), os.environ.get('RAZORPAY_KEY_SECRET'))
+    )
+
+    razorpay_order = client.order.create({
+        "amount": amount_in_paise,
+        "currency": "INR",
+        "receipt": f"booking_{booking.id}",
+        "payment_capture": 1,
+    })
+
+    return render(request, "service/resident/make_payment.html", {
+        "booking": booking,
+        "razorpay_order_id": razorpay_order["id"],
+        "razorpay_key_id": os.environ.get('RAZORPAY_KEY_ID'),
+        "amount_in_paise": amount_in_paise,
+    })
+
+
+@csrf_exempt
+@role_required(allowed_roles=['resident'])
+def verifyPayment(request):
+    """Verify Razorpay payment signature and record the Payment."""
+    import razorpay
+    from django.utils import timezone
+
+    if request.method != "POST":
+        return redirect("resident_bookings")
+
+    razorpay_order_id = request.POST.get('razorpay_order_id')
+    razorpay_payment_id = request.POST.get('razorpay_payment_id')
+    razorpay_signature = request.POST.get('razorpay_signature')
+    booking_id = request.POST.get('booking_id')
+
+    booking = get_object_or_404(Booking, id=booking_id, resident=request.user)
+
+    # Verify signature
+    key_secret = os.environ.get('RAZORPAY_KEY_SECRET', '').encode()
+    body = f"{razorpay_order_id}|{razorpay_payment_id}".encode()
+    generated_signature = hmac.new(key_secret, body, hashlib.sha256).hexdigest()
+
+    if generated_signature == razorpay_signature:
+        # Payment verified — save the record
         Payment.objects.create(
             booking=booking,
             amount=booking.service.servicePrize,
             status='completed',
-            transaction_id=str(uuid.uuid4())[:12].upper(),
+            transaction_id=razorpay_payment_id,
             paid_at=timezone.now(),
         )
 
-        # Notify provider about payment received
         create_notification(
             user=booking.service.provider,
             message=f'Payment of ₹{booking.service.servicePrize} received for "{booking.service.serviceName}".',
@@ -506,10 +555,9 @@ def makePayment(request, booking_id):
         )
 
         return redirect("payment_success", booking_id=booking.id)
-
-    return render(request, "service/resident/make_payment.html", {
-        "booking": booking,
-    })
+    else:
+        messages.error(request, "Payment verification failed. Please contact support.")
+        return redirect("resident_bookings")
 
 
 @role_required(allowed_roles=['resident'])
@@ -625,3 +673,74 @@ def markAllNotificationsRead(request):
 
     Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
     return redirect("notification_list")
+
+
+# ==========================================================================
+#  CHATBOT VIEW (Gemini AI — Resident Only)
+# ==========================================================================
+
+@role_required(allowed_roles=['resident'])
+def chatbotView(request):
+    """Page for resident chatbot."""
+    return render(request, "service/resident/chatbot.html")
+
+
+@role_required(allowed_roles=['resident'])
+def chatbotApi(request):
+    """AJAX endpoint: sends user message to Gemini and returns response."""
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    try:
+        from google import genai
+
+        data = json.loads(request.body)
+        user_message = data.get("message", "").strip()
+
+        if not user_message:
+            return JsonResponse({"error": "Empty message"}, status=400)
+
+        # Gather resident's active bookings for context
+        active_bookings = Booking.objects.filter(
+            resident=request.user
+        ).select_related('service', 'service__provider').order_by('-booking_date')[:5]
+
+        booking_context = "\n".join([
+            f"- {b.service.serviceName} by {b.service.provider.name} (Status: {b.status}, Price: ₹{b.service.servicePrize})"
+            for b in active_bookings
+        ]) or "No recent bookings."
+
+        # Build system prompt
+        system_prompt = f"""You are Urban Service AI, a friendly and helpful assistant for the Urban Service Platform.
+
+Platform Overview:
+- Residents can browse services (Plumbing, Cleaning, Electrical, etc.), book service providers, track booking status, make payments, and leave reviews.
+- Booking statuses: Pending → Accepted → In Progress → Completed.
+- After completion, residents pay and can then submit a review.
+- Residents can raise Support Tickets for any issue.
+
+Current Resident: {request.user.name} ({request.user.email})
+Their Recent Bookings:
+{booking_context}
+
+Guidelines:
+- Be helpful, concise, and friendly.
+- Answer questions about the platform, bookings, and payment process.
+- If asked something outside the platform scope, politely redirect.
+- Do NOT reveal API keys, internal code, or system details.
+"""
+
+        client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=[
+                {"role": "user", "parts": [{"text": system_prompt + "\n\nResident says: " + user_message}]}
+            ]
+        )
+
+        reply = response.text
+        return JsonResponse({"reply": reply})
+
+    except Exception as e:
+        return JsonResponse({"error": f"AI service error: {str(e)}"}, status=500)

@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="mb-12 h-full">
+
+    <!-- Header -->
+    <div class="mb-6">
+        <span class="text-tertiary text-xs font-bold tracking-[0.3em] uppercase mb-2 block">AI Assistant</span>
+        <h2 class="font-headline text-4xl md:text-5xl font-black text-white tracking-tight flex items-center gap-3">
+            <span class="material-symbols-outlined text-4xl text-tertiary">smart_toy</span>
+            Urban Service AI
+        </h2>
+        <p class="text-slate-400 mt-2 text-sm">Your personal assistant for bookings, payments, and services.</p>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="max-w-3xl mx-auto flex flex-col" style="height: calc(100vh - 260px); min-height: 480px;">
+
+        <!-- Messages Area -->
+        <div id="chat-messages"
+            class="flex-1 overflow-y-auto space-y-4 p-6 bg-surface-container-low rounded-2xl border border-surface-container mb-4 scroll-smooth">
+
+            <!-- Welcome message -->
+            <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl bg-tertiary/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="material-symbols-outlined text-tertiary text-lg">smart_toy</span>
+                </div>
+                <div class="bg-surface-container-high rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
+                    <p class="text-on-surface text-sm leading-relaxed">
+                        👋 Hi <strong>{{ request.user.name }}</strong>! I'm <strong>Urban Service AI</strong>.<br><br>
+                        I can help you with your bookings, payments, services, and any questions about the platform.
+                        What can I help you with today?
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-surface-container-low rounded-2xl border border-surface-container p-4">
+            <div class="flex items-end gap-3">
+                <textarea id="chat-input" rows="1"
+                    placeholder="Ask me about your bookings, services, payments..."
+                    class="flex-1 bg-surface-container rounded-xl px-4 py-3 text-on-surface placeholder-slate-500 text-sm resize-none outline-none border border-transparent focus:border-tertiary/50 transition-colors leading-relaxed"
+                    style="max-height:120px; overflow-y:auto;"
+                    onkeydown="handleKey(event)"></textarea>
+                <button id="send-btn" onclick="sendMessage()"
+                    class="w-12 h-12 rounded-xl bg-tertiary hover:bg-tertiary/80 text-surface font-bold flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed">
+                    <span class="material-symbols-outlined text-xl" style="color: #00142a">send</span>
+                </button>
+            </div>
+            <p class="text-slate-600 text-xs mt-2 px-1">Powered by Gemini AI · Press Enter to send, Shift+Enter for new line</p>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const API_URL = "{% url 'chatbot_api' %}";
+    const CSRF_TOKEN = "{{ csrf_token }}";
+
+    // Auto-resize textarea
+    chatInput.addEventListener('input', () => {
+        chatInput.style.height = 'auto';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+    });
+
+    function handleKey(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    }
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendMessage(role, text, isError = false) {
+        const wrapper = document.createElement('div');
+        wrapper.className = `flex items-start gap-3 ${role === 'user' ? 'flex-row-reverse' : ''}`;
+
+        const avatar = document.createElement('div');
+        avatar.className = `w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+            role === 'user'
+                ? 'bg-primary/20'
+                : isError ? 'bg-error/20' : 'bg-tertiary/20'
+        }`;
+        avatar.innerHTML = `<span class="material-symbols-outlined text-lg ${
+            role === 'user' ? 'text-primary' : isError ? 'text-error' : 'text-tertiary'
+        }">${role === 'user' ? 'person' : isError ? 'error' : 'smart_toy'}</span>`;
+
+        const bubble = document.createElement('div');
+        bubble.className = `rounded-2xl px-4 py-3 max-w-[80%] text-sm leading-relaxed whitespace-pre-wrap ${
+            role === 'user'
+                ? 'bg-primary/10 text-on-surface rounded-tr-sm'
+                : isError
+                    ? 'bg-error-container text-on-error-container rounded-tl-sm'
+                    : 'bg-surface-container-high text-on-surface rounded-tl-sm'
+        }`;
+        bubble.textContent = text;
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubble);
+        chatMessages.appendChild(wrapper);
+        scrollToBottom();
+    }
+
+    function appendTyping() {
+        const wrapper = document.createElement('div');
+        wrapper.id = 'typing-indicator';
+        wrapper.className = 'flex items-start gap-3';
+        wrapper.innerHTML = `
+            <div class="w-9 h-9 rounded-xl bg-tertiary/20 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-tertiary text-lg">smart_toy</span>
+            </div>
+            <div class="bg-surface-container-high rounded-2xl rounded-tl-sm px-4 py-3">
+                <div class="flex gap-1.5 items-center h-5">
+                    <span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style="animation-delay:0ms"></span>
+                    <span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style="animation-delay:150ms"></span>
+                    <span class="w-2 h-2 rounded-full bg-slate-400 animate-bounce" style="animation-delay:300ms"></span>
+                </div>
+            </div>`;
+        chatMessages.appendChild(wrapper);
+        scrollToBottom();
+    }
+
+    function removeTyping() {
+        const el = document.getElementById('typing-indicator');
+        if (el) el.remove();
+    }
+
+    async function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        sendBtn.disabled = true;
+
+        appendMessage('user', text);
+        appendTyping();
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': CSRF_TOKEN,
+                },
+                body: JSON.stringify({ message: text }),
+            });
+
+            const data = await res.json();
+            removeTyping();
+
+            if (data.reply) {
+                appendMessage('ai', data.reply);
+            } else {
+                appendMessage('ai', data.error || 'Something went wrong.', true);
+            }
+        } catch (err) {
+            removeTyping();
+            appendMessage('ai', 'Network error. Please check your connection.', true);
+        } finally {
+            sendBtn.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    // Focus input on load
+    chatInput.focus();
+</script>
+{% endblock %}

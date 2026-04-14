@@ -106,4 +106,235 @@
         </a>
     </div>
 </section>
+
+<!-- ===== FLOATING AI CHAT WIDGET ===== -->
+
+<!-- FAB Toggle Button -->
+<button id="chatbot-toggle" onclick="toggleChat()"
+    class="fixed bottom-24 right-6 md:bottom-8 z-50 group"
+    title="Chat with Urban Service AI">
+    <div class="relative w-14 h-14 rounded-2xl flex items-center justify-center
+                bg-tertiary shadow-[0_0_30px_rgba(81,215,244,0.35)]
+                hover:shadow-[0_0_50px_rgba(81,215,244,0.7)]
+                transition-all duration-300 hover:scale-110 active:scale-95">
+        <span class="absolute inset-0 rounded-2xl bg-tertiary/40 animate-ping opacity-50"></span>
+        <span id="fab-icon" class="material-symbols-outlined text-2xl relative z-10 transition-transform duration-300"
+              style="color:#00142a; font-variation-settings:'FILL' 1;">smart_toy</span>
+    </div>
+</button>
+
+<!-- Chat Widget Panel -->
+<div id="chat-widget"
+    class="fixed bottom-28 right-6 md:bottom-28 md:right-8 z-50 w-[340px] max-w-[calc(100vw-2rem)]
+           flex flex-col rounded-2xl overflow-hidden
+           border border-[#092b4b] shadow-[0_24px_80px_rgba(0,0,0,0.6)]
+           transition-all duration-300 origin-bottom-right
+           scale-0 opacity-0 pointer-events-none"
+    style="height: 480px; background: #001c37;">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b border-[#092b4b] shrink-0"
+         style="background: #00142a;">
+        <div class="w-9 h-9 rounded-xl bg-tertiary/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-tertiary text-lg" style="font-variation-settings:'FILL' 1;">smart_toy</span>
+        </div>
+        <div class="flex-1">
+            <p class="text-white font-bold text-sm font-['Space_Grotesk']">Urban Service AI</p>
+            <p class="text-tertiary text-[11px] font-medium flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-tertiary inline-block animate-pulse"></span>
+                Online · Powered by Gemini
+            </p>
+        </div>
+        <div class="flex items-center gap-1">
+            <a href="{% url 'chatbot' %}" title="Open full page"
+               class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-colors">
+                <span class="material-symbols-outlined text-lg">open_in_new</span>
+            </a>
+            <button onclick="toggleChat()"
+                class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-colors">
+                <span class="material-symbols-outlined text-lg">close</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div id="widget-messages" class="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth">
+
+        <!-- Welcome message -->
+        <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-tertiary/20 flex items-center justify-center shrink-0 mt-0.5">
+                <span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings:'FILL' 1;">smart_toy</span>
+            </div>
+            <div class="flex flex-col gap-1 max-w-[85%]">
+                <div class="bg-[#092b4b] rounded-2xl rounded-tl-sm px-3.5 py-2.5">
+                    <p class="text-on-surface text-xs leading-relaxed">
+                        Hi <strong>{{ request.user.name }}</strong> 👋<br>
+                        I'm your Urban Service AI. I can help you find services, track bookings, or answer payment questions.<br><br>
+                        <em class="text-slate-400">What can I help you with today?</em>
+                    </p>
+                </div>
+                <!-- Quick reply chips -->
+                <div class="flex flex-wrap gap-1.5 mt-1">
+                    <button onclick="quickSend('How do I book a service?')"
+                        class="text-[11px] font-medium px-3 py-1.5 rounded-full border border-tertiary/40 text-tertiary hover:bg-tertiary/10 transition-colors">
+                        Book a service
+                    </button>
+                    <button onclick="quickSend('What are my current bookings?')"
+                        class="text-[11px] font-medium px-3 py-1.5 rounded-full border border-tertiary/40 text-tertiary hover:bg-tertiary/10 transition-colors">
+                        My bookings
+                    </button>
+                    <button onclick="quickSend('How do I make a payment?')"
+                        class="text-[11px] font-medium px-3 py-1.5 rounded-full border border-tertiary/40 text-tertiary hover:bg-tertiary/10 transition-colors">
+                        Payments
+                    </button>
+                    <button onclick="quickSend('How do I raise a support ticket?')"
+                        class="text-[11px] font-medium px-3 py-1.5 rounded-full border border-tertiary/40 text-tertiary hover:bg-tertiary/10 transition-colors">
+                        Ask a question
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Input Area -->
+    <div class="px-3 py-3 border-t border-[#092b4b] shrink-0" style="background:#00142a;">
+        <div class="flex items-end gap-2">
+            <textarea id="widget-input" rows="1" placeholder="Write your message..."
+                class="flex-1 bg-[#001c37] border border-[#092b4b] focus:border-tertiary/60 rounded-xl px-3.5 py-2.5
+                       text-on-surface placeholder-slate-600 text-xs resize-none outline-none
+                       transition-colors leading-relaxed"
+                style="max-height:80px;"
+                onkeydown="widgetKey(event)" oninput="autoResize(this)"></textarea>
+            <button id="widget-send-btn" onclick="widgetSend()"
+                class="w-9 h-9 rounded-xl bg-tertiary hover:bg-tertiary/80 flex items-center justify-center
+                       transition-all duration-200 hover:scale-105 active:scale-95 shrink-0 disabled:opacity-40">
+                <span class="material-symbols-outlined text-base" style="color:#00142a;">send</span>
+            </button>
+        </div>
+        <p class="text-slate-600 text-[10px] mt-1.5 text-center">AI-powered · Responses may not always be accurate</p>
+    </div>
+</div>
+
+<style>
+    @keyframes fab-bounce {
+        from { opacity:0; transform: scale(0.5) translateY(16px); }
+        to   { opacity:1; transform: scale(1)   translateY(0);    }
+    }
+    #chatbot-toggle { animation: fab-bounce 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+    #chat-widget.open {
+        transform: scale(1) !important;
+        opacity: 1 !important;
+        pointer-events: all !important;
+    }
+    #widget-messages::-webkit-scrollbar { width: 4px; }
+    #widget-messages::-webkit-scrollbar-track { background: transparent; }
+    #widget-messages::-webkit-scrollbar-thumb { background: #092b4b; border-radius: 4px; }
+</style>
+
+<script>
+    const WIDGET_API = "{% url 'chatbot_api' %}";
+    const WIDGET_CSRF = "{{ csrf_token }}";
+    const widgetMessages = document.getElementById('widget-messages');
+    const widgetInput = document.getElementById('widget-input');
+    const widgetSendBtn = document.getElementById('widget-send-btn');
+    const chatWidget = document.getElementById('chat-widget');
+    const fabIcon = document.getElementById('fab-icon');
+
+    let chatOpen = false;
+
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        chatWidget.classList.toggle('open', chatOpen);
+        fabIcon.textContent = chatOpen ? 'close' : 'smart_toy';
+        if (chatOpen) { widgetInput.focus(); widgetScrollBottom(); }
+    }
+
+    function widgetScrollBottom() {
+        widgetMessages.scrollTop = widgetMessages.scrollHeight;
+    }
+
+    function autoResize(el) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+    }
+
+    function widgetKey(e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); widgetSend(); }
+    }
+
+    function quickSend(text) {
+        widgetInput.value = text;
+        widgetSend();
+    }
+
+    function appendWidgetMsg(role, text, isError=false) {
+        const isAI = role === 'ai';
+        const wrap = document.createElement('div');
+        wrap.className = `flex items-start gap-2.5 ${isAI ? '' : 'flex-row-reverse'}`;
+
+        const avatar = document.createElement('div');
+        avatar.className = `w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isAI ? 'bg-tertiary/20' : 'bg-primary/20'}`;
+        avatar.innerHTML = `<span class="material-symbols-outlined text-sm ${isAI ? 'text-tertiary' : 'text-primary'}" style="font-variation-settings:'FILL' 1;">${isAI ? 'smart_toy' : 'person'}</span>`;
+
+        const bubble = document.createElement('div');
+        bubble.className = `max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-wrap break-words ${
+            isAI ? (isError ? 'bg-error-container/30 text-error rounded-tl-sm' : 'bg-[#092b4b] text-on-surface rounded-tl-sm')
+                 : 'bg-primary/15 text-on-surface rounded-tr-sm'
+        }`;
+        bubble.textContent = text;
+
+        wrap.appendChild(avatar);
+        wrap.appendChild(bubble);
+        widgetMessages.appendChild(wrap);
+        widgetScrollBottom();
+    }
+
+    function appendWidgetTyping() {
+        const wrap = document.createElement('div');
+        wrap.id = 'w-typing';
+        wrap.className = 'flex items-start gap-2.5';
+        wrap.innerHTML = `
+            <div class="w-7 h-7 rounded-lg bg-tertiary/20 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings:'FILL' 1;">smart_toy</span>
+            </div>
+            <div class="bg-[#092b4b] rounded-2xl rounded-tl-sm px-3.5 py-2.5">
+                <div class="flex gap-1 items-center h-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:0ms"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:150ms"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style="animation-delay:300ms"></span>
+                </div>
+            </div>`;
+        widgetMessages.appendChild(wrap);
+        widgetScrollBottom();
+    }
+
+    async function widgetSend() {
+        const text = widgetInput.value.trim();
+        if (!text) return;
+        widgetInput.value = '';
+        widgetInput.style.height = 'auto';
+        widgetSendBtn.disabled = true;
+
+        appendWidgetMsg('user', text);
+        appendWidgetTyping();
+
+        try {
+            const res = await fetch(WIDGET_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': WIDGET_CSRF },
+                body: JSON.stringify({ message: text }),
+            });
+            const data = await res.json();
+            document.getElementById('w-typing')?.remove();
+            appendWidgetMsg('ai', data.reply || data.error || 'Something went wrong.', !!data.error);
+        } catch {
+            document.getElementById('w-typing')?.remove();
+            appendWidgetMsg('ai', 'Network error. Please try again.', true);
+        } finally {
+            widgetSendBtn.disabled = false;
+            widgetInput.focus();
+        }
+    }
+</script>
 {% endblock %}

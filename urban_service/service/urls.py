@@ -49,6 +49,7 @@ urlpatterns = [
     path("pay/<int:booking_id>/", views.makePayment, name="make_payment"),
     path("payment-success/<int:booking_id>/", views.paymentSuccess, name="payment_success"),
     path("payment-history/", views.paymentHistory, name="payment_history"),
+    path("verify-payment/", views.verifyPayment, name="verify_payment"),
 
     # ---------- Messaging ----------
     path("conversation/<int:booking_id>/", views.bookingConversation, name="booking_conversation"),
@@ -57,6 +58,10 @@ urlpatterns = [
     path("notifications/", views.notificationList, name="notification_list"),
     path("notifications/read/<int:notification_id>/", views.markNotificationRead, name="mark_notification_read"),
     path("notifications/read-all/", views.markAllNotificationsRead, name="mark_all_notifications_read"),
+
+    # ---------- Chatbot ----------
+    path("chatbot/", views.chatbotView, name="chatbot"),
+    path("chatbot/api/", views.chatbotApi, name="chatbot_api"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
